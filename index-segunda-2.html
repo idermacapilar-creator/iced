@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Iderma Capilar Educa – Salud, Ciencia y Conciencia</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+
+<style>
+  :root {
+    --blue-deep: #0a1a5c;
+    --blue-mid: #1a3a9e;
+    --blue-bright: #1565e8;
+    --blue-light: #4fc3f7;
+    --gold: #f5a623;
+    --gold-light: #ffd166;
+    --white: #ffffff;
+    --gray-light: #e8eaf0;
+    --text-body: #cdd8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    background: var(--blue-deep);
+    color: var(--white);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform .1s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(245,166,35,.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: all .18s ease;
+  }
+
+  /* ── FULLPAGE SCROLL ── */
+  html, body { height: 100%; overflow: hidden; }
+
+  section, footer {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Footer puede ser menor que 100vh */
+  footer { height: auto; min-height: 100vh; }
+
+  /* ── SCROLL-BAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--blue-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background .4s ease, backdrop-filter .4s ease;
+    background: linear-gradient(to bottom, rgba(5, 14, 61, 0.85) 0%, transparent 100%);
+  }
+  header.scrolled {
+    background: linear-gradient(to bottom, rgba(5, 14, 61, 0.92) 0%, rgba(5, 14, 61, 0) 100%);
+
+  }
+
+  .logo-wrap { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(8px);
+  }
+  .logo-icon svg { width: 32px; height: 32px; }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    cursor: none;
+    width: 44px; height: 44px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+    border: none; background: none; padding: 4px; z-index: 1100;
+  }
+  .hamburger span {
+    display: block; width: 28px; height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform .35s ease, opacity .35s ease, width .35s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* ── NAV OVERLAY ── */
+  .nav-overlay {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(480px, 100vw);
+    background: rgba(200,215,240,.15);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 1050;
+    padding: 100px 60px 60px;
+    transform: translateX(100%);
+    transition: transform .5s cubic-bezier(.76,0,.24,1);
+    border-left: 1px solid rgba(255,255,255,.1);
+    overflow-y: auto;
+  }
+  .nav-overlay.open { transform: translateX(0); }
+
+  .nav-overlay nav a {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+    color: var(--white);
+    text-decoration: none;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    transition: color .25s, padding-left .25s;
+    position: relative;
+  }
+  .nav-overlay nav a:hover { color: var(--gold); padding-left: 12px; }
+  .nav-overlay nav a.active {
+    color: var(--gold); font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-overlay nav a.active::before {
+    content: '▷'; font-size: .8rem; color: var(--gold);
+  }
+  .nav-section-label {
+    font-size: .75rem; letter-spacing: .15em;
+    color: rgba(255,255,255,.45); text-transform: uppercase;
+    margin: 28px 0 8px;
+  }
+  .nav-close-btn {
+    position: absolute; top: 24px; right: 24px;
+    width: 44px; height: 44px;
+    border: none; background: rgba(255,255,255,.12);
+    border-radius: 50%;
+    color: white; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: none;
+    transition: background .25s, transform .25s, color .25s;
+    line-height: 1;
+    backdrop-filter: blur(8px);
+  }
+  .nav-close-btn:hover {
+    background: var(--gold); color: var(--blue-deep);
+    transform: rotate(90deg) scale(1.1);
+  }
+
+  .nav-copyright {
+    margin-top: 40px;
+    font-size: .7rem; color: rgba(255,255,255,.35); line-height: 1.7;
+  }
+
+  /* ── SECTION BASE ── */
+  section { position: relative; overflow: hidden; }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh; min-height: 600px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--blue-deep);
+  }
+  .hero-video-wrap {
+    position: absolute; inset: 0;
+    overflow: hidden;
+  }
+  /* ── HEADER sin borde ni fondo inicial ── */
+  header { border: none; box-shadow: none; }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh; min-height: 600px;
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    padding-bottom: 14vh;
+    background: var(--blue-deep);
+    position: relative; overflow: hidden;
+  }
+
+  @media (max-width: 900px) {
+    #hero { align-items: center; padding-bottom: 0; }
+  }
+
+  .hero-video-wrap {
+    position: absolute; inset: 0; overflow: hidden;
+  }
+  .hero-video-wrap video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(.42);
+    transform: scale(1.04);
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg,
+      rgba(10,26,92,.78) 0%,
+      rgba(10,26,92,.42) 55%,
+      rgba(10,26,92,.62) 100%);
+  }
+
+  /* ── TRIÁNGULOS DORADOS ── */
+  /*
+    Equilátero: lado S = 480px → altura h = S * √3/2 ≈ 416px
+    top:  base en esquina superior-derecha, punta apunta hacia abajo-izquierda (centro)
+    bot:  base en esquina inferior-izquierda, punta apunta hacia arriba-derecha (centro)
+  */
+  .hero-tri {
+    position: absolute; pointer-events: none; z-index: 2;
+  }
+  /* Superior derecho: forma redondeada, punta hacia centro-izquierda */
+  .hero-tri-top {
+    top: -150px; right: -300px;
+    width: 480px; height: 480px;
+    border-radius: 10% 10% 10% 10% / 10% 10% 10% 10%;
+    background: linear-gradient(
+      225deg,
+      rgba(195,130,0,.95) 0%,
+      rgba(245,166,35,.60) 45%,
+      rgba(245,166,35,.15) 70%,
+      transparent 100%
+    );
+    transform: rotate(35deg) translateX(120%);
+  }
+  /* Inferior izquierdo: forma redondeada, punta hacia centro-derecha */
+  .hero-tri-bot {
+    bottom: -650px; left: -350px;
+    width: 580px; height: 580px;
+    border-radius: 10% 10% 10% 10% / 10% 10% 10% 10%;
+    background: linear-gradient(
+      125deg,
+      rgba(195,130,0,.95) 0%,
+      rgba(245,166,35,.60) 45%,
+      rgba(245,166,35,.15) 70%,
+      transparent 100%
+    );
+    transform: rotate(35deg) translateX(-120%);
+  }
+
+  /* ── FOTO DOCTORES ── */
+  .hero-doctors {
+    position: absolute; right: 0; bottom: 0;
+    width: 35%; height: 100%;
+    z-index: 2; pointer-events: none;
+    display: flex; align-items: flex-end; justify-content: center;
+    transform: translateY(100%);
+  }
+  .hero-doctors img {
+    width: 100%; height: auto;
+    object-fit: contain; object-position: bottom center;
+    mix-blend-mode: multiply;
+    opacity: .6;
+  }
+
+  /* ── CONTENIDO IZQUIERDA ── */
+  .hero-left-wrap {
+    position: relative; z-index: 3;
+    margin-left: 200px;
+    padding: 0;
+    width: 55%;
+    max-width: 800px;
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-weight: 200;
+    font-size: clamp(1.4rem, 5vw, 5rem);
+    color: var(--white);
+    opacity: 0; transform: translateX(33px);
+    margin-bottom: 0;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .hero-title-big {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 7rem);
+    line-height: .95;
+    color: var(--white);
+    opacity: 0; transform: translateX(-50px);
+    letter-spacing: -.01em;
+    margin-bottom: 18px;
+    white-space: nowrap;
+  }
+
+  .hero-sub {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(.9rem, 1.6vw, 1.6rem);
+    color: var(--blue-light);
+    line-height: 1.6;
+    opacity: 0; transform: translateX(-30px);
+    margin-bottom: 36px;
+    max-width: 720px;
+  }
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    #hero { align-items: center; padding-bottom: 0; justify-content: center; }
+    .hero-left-wrap {
+      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
+      padding: 0 32px;
+    }
+    .hero-eyebrow { white-space: normal; }
+    .hero-title-big { white-space: normal; font-size: clamp(2.4rem, 8vw, 4.5rem); }
+    .hero-doctors { width: 60%; opacity: .35; }
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .hero-left-wrap { margin-left: 0; padding: 0 20px; }
+    .hero-title-big { font-size: clamp(2rem, 11vw, 3rem); white-space: normal; }
+    .hero-eyebrow   { font-size: clamp(1.1rem, 5.5vw, 1.6rem); white-space: normal; }
+    .hero-sub       { font-size: .9rem; max-width: 100%; }
+    .hero-doctors   { display: none; }
+    .hero-tri-top   { width: 200px; height: 200px; }
+    .hero-tri-bot   { width: 180px; height: 180px; }
+  }
+
+  /* ── BOTÓN HERO ── */
+  .hero-btn {
+    position: relative;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 15px 33px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic; font-size: 1.1rem;
+    color: var(--white);
+    text-decoration: none;
+    background: transparent;
+    border-radius: 6px;
+    border: none;
+    overflow: hidden;
+    cursor: none;
+    opacity: 0; transform: translateX(-30px);
+    transition: color .4s;
+  }
+  .hero-btn:hover { color: var(--gold-light); }
+
+  /* Borde dorado degradé suave y tenue */
+  .hero-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 6px;
+    padding: 1px;
+    background: linear-gradient(105deg,
+      transparent          0%,
+      rgba(180,130,20,.15) 15%,
+      rgba(220,170,40,.5)  30%,
+      rgba(255,210,80,.9)  45%,
+      rgba(240,185,50,.8)  50%,
+      rgba(220,170,40,.5)  55%,
+      rgba(180,130,20,.15) 70%,
+      transparent          100%);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Destello estirado que recorre el contorno lentamente */
+  .hero-btn-glint {
+    position: absolute; inset: 0;
+    border-radius: 6px;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .hero-btn-glint::before {
+    content: '';
+    position: absolute;
+    width: 80px; height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg,
+      transparent               0%,
+      rgba(255,220,80,.0)       5%,
+      rgba(255,230,100,.5)      25%,
+      rgba(255,245,160,1)       50%,
+      rgba(255,230,100,.5)      75%,
+      rgba(255,220,80,.0)       95%,
+      transparent               100%);
+    filter: blur(1.7px);
+    offset-path: inset(0 round 6px);
+    offset-rotate: auto;
+    animation: glintPath 7s cubic-bezier(.4,0,.6,1) infinite;
+    top: -3px; left: -3px;
+  }
+  @keyframes glintPath {
+    0%   { offset-distance: 0%;   opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+
+  .hero-btn-text { position: relative; z-index: 1; }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    opacity: 0; z-index: 3;
+  }
+  .scroll-mouse {
+    width: 24px; height: 38px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-radius: 12px;
+    position: relative;
+  }
+  .scroll-mouse::before {
+    content: '';
+    width: 3px; height: 8px;
+    background: var(--gold);
+    border-radius: 2px;
+    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+    animation: scrollAnim 1.6s ease-in-out infinite;
+  }
+  .scroll-chevrons { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .scroll-chevrons span {
+    display: block; width: 8px; height: 8px;
+    border-right: 1.5px solid rgba(255,255,255,.4);
+    border-bottom: 1.5px solid rgba(255,255,255,.4);
+    transform: rotate(45deg);
+    animation: chevronFade 1.6s ease-in-out infinite;
+  }
+  .scroll-chevrons span:nth-child(2) { animation-delay: .2s; opacity: .6; }
+  .scroll-chevrons span:nth-child(3) { animation-delay: .4s; opacity: .3; }
+  @keyframes scrollAnim {
+    0%,100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+    60% { transform: translateX(-50%) translateY(12px); opacity: 0; }
+  }
+  @keyframes chevronFade {
+    0%,100% { opacity: .4; } 50% { opacity: 1; }
+  }
+
+  /* ── SECTION APPEAR TRANSITION ── */
+  .appear-section { opacity: 0; transform: translateY(50px); }
+
+  /* ── SECTION TITLE SHARED ── */
+  .section-title {
+    text-align: center;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    margin-bottom: 48px;
+    color: var(--blue-deep);
+  }
+  .section-title.light { color: var(--white); }
+
+  /* ── CARRUSEL DE SERVICIOS ── */
+  #servicios {
+    position: relative;
+    height: 100vh; min-height: 600px;
+    overflow: hidden;
+  }
+
+  /* Fondo foto con overlay azul */
+  .srv-bg {
+    position: absolute; inset: 0; z-index: 0;
+  }
+  .srv-bg img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(.45) saturate(.6);
+  }
+  .srv-bg-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg,
+      rgba(5,14,61,.88) 0%,
+      rgba(10,26,140,.72) 50%,
+      rgba(5,14,61,.88) 100%);
+  }
+
+  /* Brillos horizontales superior e inferior */
+  .srv-glow {
+    position: absolute; left: 6%; right: 6%;
+    height: 1px; z-index: 2; pointer-events: none;
+  }
+  .srv-glow-top { top: 18%; }
+  .srv-glow-bot { bottom: 18%; }
+  .srv-glow-line {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(180,140,40,.2) 10%,
+      rgba(220,185,60,.55) 30%,
+      rgba(255,230,120,.9) 50%,
+      rgba(220,185,60,.55) 70%,
+      rgba(180,140,40,.2) 90%,
+      transparent 100%);
+  }
+  .srv-glow-blur {
+    width: 60%; height: 18px;
+    margin: -9px auto 0;
+    background: radial-gradient(ellipse at center,
+      rgba(255,220,80,.18) 0%, transparent 70%);
+    filter: blur(4px);
+  }
+
+  /* Swiper fullscreen */
+  .services-swiper {
+    position: absolute; inset: 0; z-index: 3;
+    padding: 0 !important;
+  }
+  .services-swiper .swiper-wrapper { height: 100%; }
+  .services-swiper .swiper-slide {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0 !important;
+    transition: opacity .9s cubic-bezier(.4,0,.2,1) !important;
+  }
+  .services-swiper .swiper-slide-active {
+    opacity: 1 !important;
+  }
+
+  /* Layout interior del slide */
+  .srv-slide-inner {
+    width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    padding: 0 6%;
+    position: relative;
+  }
+
+  /* Columna izquierda */
+  .srv-col-left {
+    display: flex; flex-direction: column;
+    align-items: flex-start; gap: 28px;
+    padding-right: 40px;
+  }
+  .srv-icon-wrap {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+    margin-bottom: 8px;
+  }
+  .srv-icon-wrap img { width: 260px; height: 260px; object-fit: contain; }
+  .srv-icon-placeholder {
+    width: 54px; height: 54px;
+    opacity: .7;
+  }
+  .srv-text-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: clamp(.95rem, 1.4vw, 1.8rem);
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .srv-text-body {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 200;
+    font-size: clamp(.82rem, 1.5vw, 1rem);
+    color: var(--text-body);
+    line-height: 1.75;
+    font-style: italic;
+  }
+
+  /* Columna central — logo */
+  .srv-col-center {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+  }
+  .srv-eyebrow {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(.65rem, .9vw, .8rem);
+    letter-spacing: .28em;
+    color: rgba(255,255,255,.5);
+    text-transform: uppercase;
+  }
+  .srv-logo-wrap {
+    width: clamp(220px, 28vw, 380px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .srv-logo-wrap img { width: 100%; height: auto; }
+  /* Logo placeholder SVG */
+  .srv-logo-svg {
+    width: 100%;
+  }
+  .srv-tagline {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(.9rem, 1.3vw, 1.1rem);
+    color: var(--blue-light);
+    letter-spacing: .06em;
+    margin-top: 4px;
+  }
+
+  /* Columna derecha */
+  .srv-col-right {
+    display: flex; flex-direction: column;
+    align-items: flex-end; gap: 28px;
+    padding-left: 40px;
+    text-align: right;
+  }
+  .srv-col-right .srv-icon-wrap { margin-left: auto; }
+
+  /* Scroll indicator dentro de servicios */
+  .srv-scroll-indicator {
+    position: absolute; bottom: 9%; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    z-index: 4; opacity: .7;
+  }
+  .srv-scroll-mouse {
+    width: 22px; height: 34px;
+    border: 1.5px solid rgba(255,255,255,.35);
+    border-radius: 11px; position: relative;
+  }
+  .srv-scroll-mouse::before {
+    content: '';
+    width: 2.5px; height: 7px;
+    background: var(--gold);
+    border-radius: 2px;
+    position: absolute; top: 5px; left: 50%;
+    transform: translateX(-50%);
+    animation: scrollAnim 1.6s ease-in-out infinite;
+  }
+  .srv-chevrons { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .srv-chevrons span {
+    display: block; width: 7px; height: 7px;
+    border-right: 1.5px solid rgba(255,255,255,.35);
+    border-bottom: 1.5px solid rgba(255,255,255,.35);
+    transform: rotate(45deg);
+    animation: chevronFade 1.6s ease-in-out infinite;
+  }
+  .srv-chevrons span:nth-child(2) { animation-delay:.2s; opacity:.6; }
+  .srv-chevrons span:nth-child(3) { animation-delay:.4s; opacity:.3; }
+
+  /* Dots navegación */
+  .srv-dots {
+    position: absolute; bottom: 9%; right: 6%;
+    display: flex; gap: 8px; z-index: 4;
+  }
+  .srv-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    transition: background .4s, transform .4s;
+    cursor: none;
+  }
+  .srv-dot.active {
+    background: var(--gold);
+    transform: scale(1.4);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    #servicios { height: auto; min-height: 100vh; }
+    .srv-slide-inner {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      padding: 100px 24px 120px;
+      gap: 36px;
+      text-align: center;
+    }
+    .srv-col-left  { align-items: center; padding-right: 0; }
+    .srv-col-right { align-items: center; padding-left: 0; text-align: center; }
+    .srv-col-right .srv-icon-wrap { margin: 0 auto; }
+  }
+
+  /* ── QUIENES SOMOS ── */
+  #quienes {
+    background: linear-gradient(160deg, #f7f9ff 0%, #eaf0ff 100%);
+    padding: 80px 0 100px;
+    position: relative;
+  }
+  #quienes::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--blue-mid), var(--gold), var(--blue-mid));
+  }
+
+  .quienes-header {
+    text-align: center; margin-bottom: 48px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--blue-deep);
+    font-weight: 400;
+  }
+
+  .quienes-swiper {
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 60px !important;
+  }
+  .quienes-slide {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: center;
+    border-radius: 24px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 8px 40px rgba(21,101,232,.1);
+  }
+  .quienes-img-wrap {
+    height: 400px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #1a3a9e, #0a1a5c);
+  }
+  .quienes-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: .75; mix-blend-mode: luminosity;
+  }
+  .quienes-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(10,26,92,.6) 0%, rgba(21,101,232,.25) 100%);
+  }
+  .quienes-text { padding: 40px 40px 40px 0; }
+  .quienes-text-title {
+    font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.6rem);
+    color: var(--blue-deep); margin-bottom: 16px; line-height: 1.25;
+  }
+  .quienes-text-title em {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic; font-weight: 400;
+    color: var(--blue-bright);
+  }
+  .quienes-text p {
+    font-size: .92rem; color: #374151; line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .quienes-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    border: 1.5px solid var(--blue-mid);
+    border-radius: 6px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--blue-mid);
+    text-decoration: none;
+    transition: all .3s ease;
+    position: relative; overflow: hidden;
+    cursor: none;
+  }
+  .quienes-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--blue-mid); transform: scaleX(0); transform-origin: left;
+    transition: transform .35s ease; z-index: -1;
+  }
+  .quienes-btn:hover { color: white; border-color: var(--blue-mid); }
+  .quienes-btn:hover::before { transform: scaleX(1); }
+
+  .quienes-nav {
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin-top: 32px;
+  }
+  .quienes-nav-btn {
+    width: 44px; height: 44px;
+    border: 1.5px solid var(--blue-mid); border-radius: 50%;
+    background: transparent; color: var(--blue-mid);
+    font-size: 1.2rem; cursor: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .3s ease;
+  }
+  .quienes-nav-btn:hover { background: var(--blue-mid); color: white; }
+
+  /* ── SESIONES ── */
+  #sesiones {
+    background: linear-gradient(160deg, #06174a 0%, #0d2878 50%, #06174a 100%);
+    padding: 80px 0 100px;
+    position: relative; overflow: hidden;
+  }
+  #sesiones::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,166,35,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .sesiones-header {
+    text-align: center; max-width: 900px; margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .sesiones-sub {
+    font-size: clamp(.9rem, 1.5vw, 1.05rem);
+    color: var(--text-body); line-height: 1.7;
+  }
+
+  .sesiones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 40px;
+  }
+  .session-card {
+    position: relative; border-radius: 16px; overflow: hidden;
+    aspect-ratio: 3/4; cursor: none;
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+  }
+  .session-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  .session-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .6s ease;
+    filter: brightness(.85);
+  }
+  .session-card:hover img { transform: scale(1.06); filter: brightness(.7); }
+
+  .session-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--gold); color: #1a0000;
+    font-weight: 800; font-size: .7rem; letter-spacing: .06em;
+    padding: 4px 10px; border-radius: 20px;
+    text-transform: uppercase; z-index: 2;
+  }
+
+  .session-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,10,50,.92) 100%);
+    z-index: 1;
+  }
+  .session-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 20px; z-index: 2;
+  }
+  .session-meta {
+    font-size: .72rem; color: rgba(255,255,255,.6);
+    font-family: 'Roboto Condensed', sans-serif; font-style: italic;
+    margin-bottom: 4px;
+  }
+  .session-title {
+    font-weight: 800; font-size: .95rem; color: white;
+    line-height: 1.3;
+  }
+  .session-logo {
+    position: absolute; bottom: 16px; right: 16px;
+    width: 32px; height: 32px; z-index: 3; opacity: .7;
+  }
+
+  /* Popup overlay */
+  .session-popup {
+    position: absolute; inset: 0; z-index: 10;
+    background: rgba(10,26,92,.92);
+    backdrop-filter: blur(8px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    opacity: 0; transform: scale(.96);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: none;
+  }
+  .session-card:hover .session-popup {
+    opacity: 1; transform: scale(1);
+    pointer-events: auto;
+  }
+  .popup-play {
+    width: 56px; height: 56px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+    color: var(--gold);
+    transition: background .3s, transform .3s;
+  }
+  .session-card:hover .popup-play { background: rgba(245,166,35,.15); transform: scale(1.1); }
+  .popup-title {
+    font-weight: 800; font-size: .95rem; margin-bottom: 8px;
+    color: white; line-height: 1.3;
+  }
+  .popup-meta { font-size: .75rem; color: var(--blue-light); font-style: italic; }
+
+  /* ── CTA ── */
+  #cta {
+    padding: 120px 40px;
+    text-align: center;
+    background: linear-gradient(135deg, #c89000 0%, #e8a800 40%, #c07000 100%);
+    position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
+    opacity: .5;
+  }
+  .cta-title {
+    font-weight: 800; font-size: clamp(1.8rem, 4vw, 3rem);
+    color: white; margin-bottom: 32px; position: relative; z-index: 1;
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 16px 48px;
+    border: 2px solid white;
+    border-radius: 6px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic; font-size: 1.15rem;
+    color: white; text-decoration: none;
+    position: relative; z-index: 1; overflow: hidden;
+    transition: color .35s;
+    cursor: none;
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(6px);
+  }
+  .cta-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: white; transform: scaleX(0); transform-origin: left;
+    transition: transform .4s ease; z-index: -1;
+  }
+  .cta-btn:hover { color: #a06000; }
+  .cta-btn:hover::before { transform: scaleX(1); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: linear-gradient(160deg, #0e2060 0%, #0a1a5c 100%);
+    padding: 60px 40px 30px;
+    position: relative;
+  }
+  footer::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .footer-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 48px; align-items: start;
+    margin-bottom: 48px;
+  }
+  .footer-brand .footer-logo { width: 200px; margin-bottom: 12px; }
+  .footer-tagline {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic; color: var(--blue-light);
+    font-size: .95rem; margin-bottom: 16px;
+  }
+  .footer-address { font-size: .82rem; color: var(--text-body); line-height: 1.8; }
+
+  .footer-social {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .footer-social-label {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: 1rem; color: var(--text-body); width: 100%;
+    margin-bottom: 8px;
+  }
+  .footer-social-label strong { color: var(--white); font-weight: 800; }
+  .social-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 1.1rem;
+    text-decoration: none;
+    transition: all .3s; cursor: none;
+  }
+  .social-icon:hover {
+    background: var(--gold); color: var(--blue-deep);
+    border-color: var(--gold);
+    transform: translateY(-3px);
+  }
+
+  .footer-links h4 {
+    font-weight: 800; font-size: .8rem;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .footer-links a {
+    display: block; font-size: .9rem;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    color: var(--text-body); text-decoration: none;
+    padding: 6px 0;
+    transition: color .25s, padding-left .25s;
+  }
+  .footer-links a:hover { color: var(--white); padding-left: 8px; }
+
+  .footer-bottom {
+    max-width: 1100px; margin: 0 auto;
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 24px;
+    font-size: .78rem; color: rgba(255,255,255,.35);
+  }
+
+  /* ── PARTICLES CANVAS ── */
+  #particles-canvas {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 1;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .quienes-slide { grid-template-columns: 1fr; }
+    .quienes-img-wrap { height: 250px; }
+    .quienes-text { padding: 30px; }
+    .sesiones-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    header { padding: 16px 20px; }
+    .sesiones-grid { padding: 0 20px; }
+  }
+  @media (max-width: 600px) {
+    .sesiones-grid { grid-template-columns: 1fr; }
+    .hero-content { padding: 0 20px; }
+    #cta { padding: 80px 24px; }
+    .nav-overlay { padding: 80px 30px 40px; }
+  }
+
+  /* ── LOADING SCREEN ── */
+  #loading {
+    position: fixed; inset: 0; z-index: 9000;
+    background: var(--blue-deep);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+  }
+  .loading-logo { opacity: 0; animation: fadeInUp .8s .2s forwards; }
+  .loading-bar-wrap {
+    width: 200px; height: 2px;
+    background: rgba(255,255,255,.1); border-radius: 2px;
+    overflow: hidden;
+  }
+  .loading-bar {
+    height: 100%; background: var(--gold);
+    animation: loadBar 1.4s ease forwards;
+  }
+  @keyframes loadBar { from { width: 0; } to { width: 100%; } }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading">
+  <div class="loading-logo">
+    <svg width="120" height="60" viewBox="0 0 120 60" fill="none">
+      <circle cx="30" cy="30" r="28" stroke="white" stroke-width="1.5" opacity=".4"/>
+      <polygon points="24,18 24,42 44,30" fill="#f5a623"/>
+      <text x="54" y="38" fill="white" font-family="Outfit" font-size="22" font-weight="800">EDUCA</text>
+    </svg>
+  </div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header id="main-header">
+  <div class="logo-wrap">
+  <img
+    src="iso-iced-web.png"
+    alt="Iderma Capilar Educa"
+    style="height: 56px; width: auto; display: block;"
+  />
+</div>
+  <button class="hamburger" id="menu-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ══════════════════ NAV OVERLAY ══════════════════ -->
+<div class="nav-overlay" id="nav-overlay">
+  <button class="nav-close-btn" id="nav-close-btn" aria-label="Cerrar menú">&#10005;</button>
+  <nav>
+    <a href="#hero">Inicio</a>
+    <a href="#servicios" class="active">&#9655; <span>Capítulos</span></a>
+    <a href="#sesiones">Sesiones</a>
+    <a href="#quienes">Expositores</a>
+    <a href="#cta">Participación</a>
+    <a href="#footer">Contacto</a>
+    <div class="nav-section-label">Institucional</div>
+    <a href="#">Convenios</a>
+    <a href="#">Trabaja con nosotros</a>
+  </nav>
+  <div class="nav-copyright">
+    © 2026 - IDERMA CAPILAR EDUCA. Derechos reservados del Autor.<br>
+    Todos los contenidos publicados en este sitio web (incluyendo textos, imágenes, gráficos, logotipos, código fuente) son propiedad intelectual de Iderma Capilar Educa o de sus creadores originales. Queda estrictamente prohibida la reproducción, distribución, modificación o transmisión total o parcial de este contenido sin la autorización previa y por escrito del titular.
+  </div>
+</div>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section id="hero">
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- VIDEO DE FONDO — reemplaza el src con tu propio MP4 -->
+  <div class="hero-video-wrap">
+    <video autoplay muted loop playsinline id="hero-video"
+      src="arias-hero-iced-web.mp4">
+    </video>
+  </div>
+
+  <!-- Overlay azul profundo -->
+  <div class="hero-overlay"></div>
+
+  <!-- Triángulo dorado superior derecho — aparece desde la derecha -->
+  <div class="hero-tri hero-tri-top" id="htri-top"></div>
+
+  <!-- Triángulo dorado inferior izquierdo — aparece desde la izquierda -->
+  <div class="hero-tri hero-tri-bot" id="htri-bot"></div>
+
+  <!-- Foto doctores — aparece desde abajo -->
+  <div class="hero-doctors" id="hero-doctors">
+    <img src="doctores.png"
+         alt="Médicos especialistas" />
+  </div>
+
+  <!-- Contenido alineado a la izquierda -->
+  <div class="hero-left-wrap">
+    <p class="hero-eyebrow" id="he1"> Compartimos</p>
+    <h1 class="hero-title-big" id="he2">CONOCIMIENTO</h1>
+    <p class="hero-sub" id="he3"> Inspirando a nuestra comunidad a cuidarse, prevenir y vivir con propósito.</p>
+    <a href="#servicios" class="hero-btn" id="he4">
+      <div class="hero-btn-glint"></div>
+      <span class="hero-btn-text">Ver Capítulos</span>
+    </a>
+  </div>
+
+  <div class="scroll-indicator" id="scroll-indicator">
+    <div class="scroll-mouse"></div>
+    <div class="scroll-chevrons">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CARRUSEL DE SERVICIOS ══════════════════ -->
+<section id="servicios" class="appear-section">
+
+  <!-- Fondo foto + overlay -->
+  <div class="srv-bg">
+    <img src="fondo-servicios-iced.png" alt="" />
+    <div class="srv-bg-overlay"></div>
+  </div>
+
+  <!-- Brillos horizontales -->
+  <div class="srv-glow srv-glow-top">
+    <div class="srv-glow-line"></div>
+    <div class="srv-glow-blur"></div>
+  </div>
+  <div class="srv-glow srv-glow-bot">
+    <div class="srv-glow-line"></div>
+    <div class="srv-glow-blur"></div>
+  </div>
+
+  <!-- Swiper -->
+  <div class="swiper services-swiper" id="services-swiper">
+    <div class="swiper-wrapper">
+
+      <!-- SLIDE 1 -->
+      <div class="swiper-slide">
+        <div class="srv-slide-inner">
+          <!-- Izquierda -->
+          <div class="srv-col-left">
+            <div class="srv-icon-wrap">
+              <!-- Reemplazar con: <img src="expositores-1-8.png" alt=""> -->
+              <img src="expositores-1-8.png" alt="">
+            </div>
+            <div>
+              <div class="srv-text-title">Expositores Nacionales e Internacionales</div>
+              <div class="srv-text-body">comparten conocimiento médico para una vida más larga, saludable y con propósito.</div>
+            </div>
+          </div>
+
+          <!-- Centro — logo -->
+          <div class="srv-col-center">
+            
+            <div class="srv-logo-wrap">
+              <!-- Reemplazar con: <img src="logotipo-iderma-educa.png" alt="Iderma Capilar Educa"> -->
+              <img src="logotipo-iderma-educa.png" alt="Iderma Capilar Educa">
+            </div>
+            
+          </div>
+
+          <!-- Derecha -->
+          <div class="srv-col-right">
+            <div class="srv-icon-wrap">
+              <!-- Reemplazar con: <img src="globo-8.png" alt=""> -->
+              <img src="globo-8.png" alt="">
+            </div>
+            <div>
+              <div class="srv-text-title" style="text-align:right;">En Iderma Capilar Educa compartimos conocimiento y experiencia.</div>
+              <div class="srv-text-body" style="text-align:right;">Ayudamos a acercar la ciencia a la vida diaria, inspirando a nuestra comunidad a cuidarse, prevenir y vivir con propósito. </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="swiper-slide">
+        <div class="srv-slide-inner">
+          <div class="srv-col-left">
+            <div class="srv-icon-wrap">
+              <svg class="srv-icon-placeholder" viewBox="0 0 54 54" fill="none">
+                <path d="M27 8 L34 20 H48 L37 29 L41 43 L27 34 L13 43 L17 29 L6 20 H20 Z" stroke="rgba(100,180,255,.8)" stroke-width="1.5" fill="none"/>
+              </svg>
+            </div>
+            <div>
+              <div class="srv-text-title">Capítulos y Sesiones</div>
+              <div class="srv-text-body">Cada capítulo reúne sesiones especializadas con los mejores expertos nacionales e internacionales en salud y bienestar.</div>
+            </div>
+          </div>
+          <div class="srv-col-center">
+            <div class="srv-eyebrow">Iderma Capilar</div>
+            <div class="srv-logo-wrap">
+              <svg class="srv-logo-svg" viewBox="0 0 380 120" fill="none">
+                <circle cx="52" cy="60" r="50" stroke="white" stroke-width="1.5" opacity=".35"/>
+                <polygon points="40,36 40,84 74,60" fill="#f5a623"/>
+                <text x="115" y="52" fill="white" font-family="Outfit" font-size="13" font-weight="300" letter-spacing="6">IDERMA CAPILAR</text>
+                <text x="108" y="92" fill="white" font-family="Outfit" font-size="52" font-weight="800" letter-spacing="-1">EDUCA</text>
+              </svg>
+            </div>
+            <div class="srv-tagline">Salud, Ciencia y Conciencia</div>
+          </div>
+          <div class="srv-col-right">
+            <div class="srv-icon-wrap">
+              <svg class="srv-icon-placeholder" viewBox="0 0 54 54" fill="none">
+                <circle cx="27" cy="22" r="10" stroke="rgba(100,180,255,.8)" stroke-width="1.5"/>
+                <path d="M10 46 C10 36 44 36 44 46" stroke="rgba(100,180,255,.8)" stroke-width="1.5" fill="none"/>
+              </svg>
+            </div>
+            <div>
+              <div class="srv-text-title" style="text-align:right;">Expositores seleccionados</div>
+              <div class="srv-text-body" style="text-align:right;">Médicos y especialistas de trayectoria comprobada, comprometidos con educar y transformar la salud de nuestra comunidad.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="swiper-slide">
+        <div class="srv-slide-inner">
+          <div class="srv-col-left">
+            <div class="srv-icon-wrap">
+              <svg class="srv-icon-placeholder" viewBox="0 0 54 54" fill="none">
+                <rect x="8" y="8" width="38" height="38" rx="4" stroke="rgba(100,180,255,.8)" stroke-width="1.5"/>
+                <line x1="8" y1="20" x2="46" y2="20" stroke="rgba(100,180,255,.4)" stroke-width="1"/>
+                <circle cx="20" cy="32" r="4" fill="rgba(245,166,35,.7)"/>
+                <circle cx="34" cy="32" r="4" fill="rgba(100,180,255,.5)"/>
+              </svg>
+            </div>
+            <div>
+              <div class="srv-text-title">Convenios e Institucional</div>
+              <div class="srv-text-body">Alianzas con instituciones líderes que amplifican el alcance del conocimiento médico y científico a más personas.</div>
+            </div>
+          </div>
+          <div class="srv-col-center">
+            <div class="srv-eyebrow">Iderma Capilar</div>
+            <div class="srv-logo-wrap">
+              <svg class="srv-logo-svg" viewBox="0 0 380 120" fill="none">
+                <circle cx="52" cy="60" r="50" stroke="white" stroke-width="1.5" opacity=".35"/>
+                <polygon points="40,36 40,84 74,60" fill="#f5a623"/>
+                <text x="115" y="52" fill="white" font-family="Outfit" font-size="13" font-weight="300" letter-spacing="6">IDERMA CAPILAR</text>
+                <text x="108" y="92" fill="white" font-family="Outfit" font-size="52" font-weight="800" letter-spacing="-1">EDUCA</text>
+              </svg>
+            </div>
+            <div class="srv-tagline">Salud, Ciencia y Conciencia</div>
+          </div>
+          <div class="srv-col-right">
+            <div class="srv-icon-wrap">
+              <svg class="srv-icon-placeholder" viewBox="0 0 54 54" fill="none">
+                <path d="M27 6 C14 6 6 16 6 27 S14 48 27 48 S48 38 48 27 S40 6 27 6Z" stroke="rgba(100,180,255,.8)" stroke-width="1.5" fill="none"/>
+                <line x1="27" y1="6" x2="27" y2="48" stroke="rgba(100,180,255,.3)" stroke-width="1"/>
+                <ellipse cx="27" cy="27" rx="10" ry="21" stroke="rgba(100,180,255,.4)" stroke-width="1"/>
+                <line x1="6" y1="27" x2="48" y2="27" stroke="rgba(100,180,255,.3)" stroke-width="1"/>
+              </svg>
+            </div>
+            <div>
+              <div class="srv-text-title" style="text-align:right;">Impacto Nacional</div>
+              <div class="srv-text-body" style="text-align:right;">Una comunidad que crece con propósito. Llevamos salud, ciencia y conciencia a cada rincón del país y más allá.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /swiper-wrapper -->
+  </div><!-- /swiper -->
+
+  <!-- Scroll indicator -->
+  <div class="srv-scroll-indicator">
+    <div class="srv-scroll-mouse"></div>
+    <div class="srv-chevrons">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Dots -->
+  <div class="srv-dots" id="srv-dots">
+    <div class="srv-dot active"></div>
+    <div class="srv-dot"></div>
+    <div class="srv-dot"></div>
+  </div>
+
+</section>
+
+<!-- ══════════════════ QUIENES SOMOS ══════════════════ -->
+<section id="quienes" class="appear-section">
+  <h2 class="quienes-header">
+    <em>Salud, Ciencia y Conciencia</em>
+  </h2>
+  <div class="swiper quienes-swiper" id="quienes-swiper">
+    <div class="swiper-wrapper" id="quienes-wrapper">
+      <!-- Slides generated by JS -->
+    </div>
+  </div>
+  <div class="quienes-nav">
+    <button class="quienes-nav-btn" id="quienes-prev">&#8592;</button>
+    <button class="quienes-nav-btn" id="quienes-next">&#8594;</button>
+  </div>
+</section>
+
+<!-- ══════════════════ SESIONES ══════════════════ -->
+<section id="sesiones" class="appear-section">
+  <div class="sesiones-header">
+    <p class="sesiones-sub">Especialistas comparten conocimientos, experiencias y avances médicos para inspirar hábitos saludables, prevención y bienestar integral en nuestra comunidad.</p>
+  </div>
+  <div class="sesiones-grid" id="sesiones-grid">
+    <!-- Cards generated by JS -->
+  </div>
+</section>
+
+<!-- ══════════════════ CTA ══════════════════ -->
+<section id="cta" class="appear-section">
+  <h2 class="cta-title">¿Quieres formar parte de esta iniciativa?</h2>
+  <a href="#footer" class="cta-btn">Más información</a>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+        <div style="width:50px;height:50px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+            <polygon points="14,10 14,38 36,24" fill="#f5a623"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:.6rem;letter-spacing:.2em;color:rgba(255,255,255,.45);text-transform:uppercase;">Iderma Capilar</div>
+          <div style="font-weight:800;font-size:1.4rem;letter-spacing:.08em;color:white;">EDUCA</div>
+        </div>
+      </div>
+      <div class="footer-tagline">Salud, Ciencia y Conciencia</div>
+      <div class="footer-address">
+        Edificio Empresarial José Pardo, Piso 19, Oficina 1903<br>
+        Calle Mártir José Olaya 129, Miraflores. Lima, Perú.
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-social">
+        <div class="footer-social-label">Síguenos en nuestras <strong>redes sociales</strong></div>
+        <a href="#" class="social-icon" title="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="social-icon" title="TikTok">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.53a8.16 8.16 0 0 0 4.77 1.52V6.6a4.85 4.85 0 0 1-1-.09z"/></svg>
+        </a>
+        <a href="#" class="social-icon" title="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+      <div class="footer-links">
+        <a href="#">Capítulos</a>
+        <a href="#sesiones">Sesiones</a>
+        <a href="#quienes">Expositores</a>
+        <a href="#cta">Participación</a>
+        <a href="#">Contacto</a>
+      </div>
+      <div class="footer-links">
+        <h4>Institucional</h4>
+        <a href="#">Convenios</a>
+        <a href="#">Trabaja con nosotros</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 - IDERMA CAPILAR EDUCA. Derechos reservados del Autor.
+  </div>
+</footer>
+
+<!-- ══════════════════ JAVASCRIPT ══════════════════ -->
+<script>
+// ── LOADING ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loading = document.getElementById('loading');
+    loading.style.transition = 'opacity .6s ease';
+    loading.style.opacity = '0';
+    setTimeout(() => { loading.style.display = 'none'; initAnimations(); }, 600);
+  }, 1600);
+});
+
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+const animCursor = () => {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * .1; ry += (my - ry) * .1;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+};
+animCursor();
+
+// ── HEADER SCROLL ──
+const header = document.getElementById('main-header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── HAMBURGER MENU ──
+const menuBtn = document.getElementById('menu-btn');
+const navOverlay = document.getElementById('nav-overlay');
+menuBtn.addEventListener('click', () => {
+  menuBtn.classList.toggle('open');
+  navOverlay.classList.toggle('open');
+});
+const navCloseBtn = document.getElementById('nav-close-btn');
+navCloseBtn.addEventListener('click', () => {
+  menuBtn.classList.remove('open');
+  navOverlay.classList.remove('open');
+});
+navOverlay.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    menuBtn.classList.remove('open');
+    navOverlay.classList.remove('open');
+  });
+});
+
+// ── PARTICLE CANVAS ──
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.r = Math.random() * 1.5 + .3;
+    this.vx = (Math.random() - .5) * .35;
+    this.vy = -(Math.random() * .4 + .1);
+    this.alpha = Math.random() * .5 + .1;
+    this.life = 0; this.maxLife = 200 + Math.random() * 200;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.maxLife || this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    const fade = this.life < 30 ? this.life / 30 : this.life > this.maxLife - 30 ? (this.maxLife - this.life) / 30 : 1;
+    ctx.fillStyle = `rgba(245,166,35,${this.alpha * fade})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+const animParticles = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animParticles);
+};
+animParticles();
+
+// ── FULLPAGE SCROLL SYSTEM ──
+// Secciones: hero (0) → servicios (1) → quienes (2) → sesiones (3) → cta (4)
+const sections = ['#hero','#servicios','#quienes','#sesiones','#cta','#footer'];
+let currentSection = 0;
+let isScrolling = false;
+let srvSwiperReady = false;
+
+// Deshabilitar scroll nativo
+document.body.style.overflow = 'hidden';
+document.documentElement.style.overflow = 'hidden';
+
+function goToSection(index, smooth = true) {
+  if (index < 0 || index >= sections.length) return;
+  currentSection = index;
+  const el = document.querySelector(sections[index]);
+  if (!el) return;
+  el.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant' });
+}
+
+// ── SERVICES SWIPER — fade ultra sensible ──
+const servSwiper = new Swiper('#services-swiper', {
+  slidesPerView: 1,
+  effect: 'fade',
+  fadeEffect: { crossFade: true },
+  speed: 750,
+  allowTouchMove: true,
+  on: {
+    slideChange: function () {
+      document.querySelectorAll('.srv-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === this.activeIndex);
+      });
+    }
+  }
+});
+srvSwiperReady = true;
+
+// Dots click
+document.querySelectorAll('.srv-dot').forEach((dot, i) => {
+  dot.addEventListener('click', () => servSwiper.slideTo(i));
+});
+
+// ── BOTÓN HERO — scroll instantáneo a servicios ──
+document.getElementById('he4').addEventListener('click', (e) => {
+  e.preventDefault();
+  currentSection = 1;
+  document.querySelector('#servicios').scrollIntoView({ behavior: 'smooth' });
+});
+
+// ── WHEEL HANDLER ──
+let wheelAccum = 0;
+const WHEEL_THRESHOLD = 220; // sensibilidad: menor = más sensible
+let wheelCooldown = false;
+
+window.addEventListener('wheel', (e) => {
+  e.preventDefault();
+
+  if (wheelCooldown) return;
+
+  const delta = e.deltaY || e.detail || e.wheelDelta;
+  wheelAccum += delta;
+
+  if (Math.abs(wheelAccum) < WHEEL_THRESHOLD) return;
+  const dir = wheelAccum > 0 ? 1 : -1;
+  wheelAccum = 0;
+
+  // Si estamos en servicios (sección 1), primero ciclar slides
+  if (currentSection === 1) {
+    if (dir > 0) {
+      // hacia adelante
+      if (servSwiper.activeIndex < servSwiper.slides.length - 1) {
+        servSwiper.slideNext();
+        wheelCooldown = true;
+        setTimeout(() => { wheelCooldown = false; }, 800);
+        return;
+      }
+      // último slide → ir a siguiente sección
+    } else {
+      // hacia atrás
+      if (servSwiper.activeIndex > 0) {
+        servSwiper.slidePrev();
+        wheelCooldown = true;
+        setTimeout(() => { wheelCooldown = false; }, 800);
+        return;
+      }
+      // primer slide → ir a sección anterior
+    }
+  }
+
+  // Cambiar sección
+  const next = currentSection + dir;
+  if (next < 0 || next >= sections.length) return;
+
+  // Si vamos a servicios desde hero, resetear swiper al slide 0
+  if (next === 1 && dir > 0) servSwiper.slideTo(0, 0);
+  // Si vamos a servicios desde quienes, ir al último slide
+  if (next === 1 && dir < 0) servSwiper.slideTo(servSwiper.slides.length - 1, 0);
+
+  goToSection(next);
+  wheelCooldown = true;
+  setTimeout(() => { wheelCooldown = false; }, 950);
+
+}, { passive: false });
+
+// ── TOUCH HANDLER (mobile) ──
+let touchStartY = 0;
+window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+window.addEventListener('touchend', e => {
+  if (wheelCooldown) return;
+  const diff = touchStartY - e.changedTouches[0].clientY;
+  if (Math.abs(diff) < 40) return;
+  const dir = diff > 0 ? 1 : -1;
+
+  if (currentSection === 1) {
+    if (dir > 0 && servSwiper.activeIndex < servSwiper.slides.length - 1) {
+      servSwiper.slideNext(); wheelCooldown = true;
+      setTimeout(() => { wheelCooldown = false; }, 800); return;
+    }
+    if (dir < 0 && servSwiper.activeIndex > 0) {
+      servSwiper.slidePrev(); wheelCooldown = true;
+      setTimeout(() => { wheelCooldown = false; }, 800); return;
+    }
+  }
+
+  const next = currentSection + dir;
+  if (next < 0 || next >= sections.length) return;
+  if (next === 1 && dir > 0) servSwiper.slideTo(0, 0);
+  if (next === 1 && dir < 0) servSwiper.slideTo(servSwiper.slides.length - 1, 0);
+  goToSection(next);
+  wheelCooldown = true;
+  setTimeout(() => { wheelCooldown = false; }, 950);
+}, { passive: true });
+
+// ── KEYBOARD NAVIGATION ──
+window.addEventListener('keydown', e => {
+  if (wheelCooldown) return;
+  if (!['ArrowDown','ArrowUp','PageDown','PageUp','Space'].includes(e.code)) return;
+  e.preventDefault();
+  const dir = ['ArrowDown','PageDown','Space'].includes(e.code) ? 1 : -1;
+
+  if (currentSection === 1) {
+    if (dir > 0 && servSwiper.activeIndex < servSwiper.slides.length - 1) {
+      servSwiper.slideNext(); wheelCooldown = true;
+      setTimeout(() => { wheelCooldown = false; }, 800); return;
+    }
+    if (dir < 0 && servSwiper.activeIndex > 0) {
+      servSwiper.slidePrev(); wheelCooldown = true;
+      setTimeout(() => { wheelCooldown = false; }, 800); return;
+    }
+  }
+
+  const next = currentSection + dir;
+  if (next < 0 || next >= sections.length) return;
+  if (next === 1 && dir > 0) servSwiper.slideTo(0, 0);
+  if (next === 1 && dir < 0) servSwiper.slideTo(servSwiper.slides.length - 1, 0);
+  goToSection(next);
+  wheelCooldown = true;
+  setTimeout(() => { wheelCooldown = false; }, 950);
+});
+
+// Nav links — scroll a sección correcta
+document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = a.getAttribute('href');
+    const idx = sections.indexOf(target);
+    if (idx !== -1) { goToSection(idx); currentSection = idx; }
+  });
+});
+
+// ── BUILD QUIENES SOMOS SLIDES ──
+const quienesData = [
+  {
+    title: 'En Iderma Capilar Educa <em>valoramos profundamente</em> tu generosidad al compartir conocimiento y experiencia.',
+    body: 'Tu contribución permite que el conocimiento científico se integre cada vez más en la vida cotidiana, motivando a nuestra comunidad a priorizar el cuidado personal, la prevención y el bienestar consciente. Cada acción suma en esta misión que busca generar un impacto positivo y duradero en la vida de las personas. Gracias por formar parte de este propósito que impulsa una cultura de salud, inspiración y transformación continua para quienes confían en nosotros cada día.',
+    bg: 'linear-gradient(135deg,#0a1a5c,#1565e8)',
+    emoji: '🎥'
+  },
+  {
+    title: 'Nuestra misión es <em>acercar la ciencia</em> a la vida diaria de las personas.',
+    body: 'Inspiramos a nuestra comunidad a cuidarse, prevenir y vivir con propósito. Trabajamos junto a expositores nacionales e internacionales para llevar el conocimiento médico más actualizado directamente a quienes más lo necesitan, con claridad, pasión y compromiso.',
+    bg: 'linear-gradient(135deg,#1a0a6c,#4a1565)',
+    emoji: '🌟'
+  },
+  {
+    title: 'Creemos en el poder <em>transformador</em> del conocimiento compartido.',
+    body: 'Cada sesión, cada capítulo, cada expositor suma a una comunidad que crece, aprende y se cuida. Iderma Capilar Educa es el espacio donde la ciencia y la conciencia se encuentran para construir una vida más plena.',
+    bg: 'linear-gradient(135deg,#0a3a1c,#156528)',
+    emoji: '💡'
+  }
+];
+
+const quienesWrapper = document.getElementById('quienes-wrapper');
+quienesData.forEach(q => {
+  quienesWrapper.innerHTML += `
+    <div class="swiper-slide">
+      <div class="quienes-slide">
+        <div class="quienes-img-wrap" style="background:${q.bg};">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:6rem;">${q.emoji}</div>
+          <div class="quienes-img-overlay"></div>
+        </div>
+        <div class="quienes-text">
+          <div class="quienes-text-title">${q.title}</div>
+          <p>${q.body}</p>
+          <a href="#" class="quienes-btn">Ver más</a>
+        </div>
+      </div>
+    </div>`;
+});
+
+// ── BUILD SESSION CARDS ──
+const sessions = [
+  { badge: 'NUEVO', date: 'C3 S11 | 10/05/2026', title: 'Glucosa, Presión y Colesterol', color: '#1a3a9e', emoji: '👨‍⚕️' },
+  { badge: 'NUEVO', date: 'C3 S11 | 10/05/2026', title: 'Glucosa, Presión y Colesterol', color: '#1a5c3a', emoji: '👩‍⚕️' },
+  { badge: 'NUEVO', date: 'C3 S11 | 10/05/2026', title: 'Glucosa, Presión y Colesterol', color: '#5c1a3a', emoji: '🧑‍⚕️' },
+];
+
+const sesGrid = document.getElementById('sesiones-grid');
+sessions.forEach(s => {
+  sesGrid.innerHTML += `
+    <div class="session-card">
+      <div style="width:100%;height:100%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:5rem;">${s.emoji}</div>
+      ${s.badge ? `<div class="session-badge">${s.badge}</div>` : ''}
+      <div class="session-overlay"></div>
+      <div class="session-info">
+        <div class="session-meta">${s.date}</div>
+        <div class="session-title">${s.title}</div>
+      </div>
+      <div class="session-popup">
+        <div class="popup-play">▶</div>
+        <div class="popup-title">${s.title}</div>
+        <div class="popup-meta">${s.date}</div>
+      </div>
+    </div>`;
+});
+
+// ── INIT ANIMATIONS ──
+function initAnimations() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero entrance — triangles animan desde los bordes (rotados 45deg), el resto desde izq/abajo
+  // Establecemos estado inicial via JS para que GSAP controle bien el transform con rotate
+  gsap.set('#htri-top', { rotation: 45, x: '120%' });
+  gsap.set('#htri-bot', { rotation: 45, x: '-120%' });
+  const tl = gsap.timeline({ delay: .3 });
+  tl.to('#htri-top', { x: 0, duration: 1.1, ease: 'power3.out' })
+    .to('#htri-bot', { x: 0, duration: 1.0, ease: 'power3.out' }, '-=.9')
+    .to('#hero-doctors', { y: 0, duration: 1.0, ease: 'power3.out' }, '-=.7')
+    .to('#he1', { opacity: 1, x: 0, duration: .7, ease: 'power3.out' }, '-=.6')
+    .to('#he2', { opacity: 1, x: 0, duration: .8, ease: 'power3.out' }, '-=.5')
+    .to('#he3', { opacity: 1, x: 0, duration: .65, ease: 'power3.out' }, '-=.45')
+    .to('#he4', { opacity: 1, x: 0, duration: .6, ease: 'power3.out' }, '-=.4')
+    .to('#scroll-indicator', { opacity: 1, duration: .6 }, '-=.1');
+
+  // Appear sections
+  gsap.utils.toArray('.appear-section').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .85, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+    });
+  });
+
+  // Servicios — animate inner elements on section enter
+  gsap.from('.srv-glow-line', {
+    scaleX: 0, duration: 1.2, ease: 'power3.out',
+    scrollTrigger: { trigger: '#servicios', start: 'top 80%', once: true }
+  });
+  gsap.from('.srv-col-left', {
+    opacity: 0, x: -40, duration: .9, ease: 'power3.out',
+    scrollTrigger: { trigger: '#servicios', start: 'top 75%', once: true }
+  });
+  gsap.from('.srv-col-right', {
+    opacity: 0, x: 40, duration: .9, ease: 'power3.out',
+    scrollTrigger: { trigger: '#servicios', start: 'top 75%', once: true }
+  });
+  gsap.from('.srv-col-center', {
+    opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: .2,
+    scrollTrigger: { trigger: '#servicios', start: 'top 75%', once: true }
+  });
+
+  // Quienes somos swiper
+  const quienesSwiper = new Swiper('#quienes-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 40,
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
+    allowTouchMove: false,
+    navigation: {
+      nextEl: '#quienes-next',
+      prevEl: '#quienes-prev',
+    }
+  });
+}
+</script>
+</body>
+</html>
