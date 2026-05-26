@@ -36,7 +36,7 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: auto; }
 
   body {
     font-family: 'Outfit', sans-serif;
@@ -46,6 +46,8 @@
     overflow-x: hidden;
     cursor: none;
   }
+  
+  
 
   /* ── CUSTOM CURSOR ── */
   .cursor {
@@ -68,16 +70,25 @@
     transition: all .18s ease;
   }
 
-  /* ── FULLPAGE SCROLL ── */
+  /* ── FULLPAGE SCROLL — Lerp style ── */
   html, body { height: 100%; overflow: hidden; }
+
+	#scroll-container {
+	  position: fixed;
+	  top: 0; left: 0;
+	  width: 100%;
+	  height: auto;
+	  will-change: transform;
+}
 
   section, footer {
     height: 100vh;
     overflow: hidden;
+    position: relative;
+	display: block;
   }
-
-  /* Footer puede ser menor que 100vh */
-  footer { height: auto; min-height: 100vh; }
+  footer { height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  footer #cta { height: auto; min-height: 0; padding: 60px 24px; }
 
   /* ── SCROLL-BAR ── */
   ::-webkit-scrollbar { width: 4px; }
@@ -350,13 +361,12 @@
   @media (max-width: 480px) {
     .hero-left-wrap { margin-left: 0; padding: 0 20px; }
     .hero-title-big { font-size: clamp(2rem, 11vw, 3rem); white-space: normal; }
-    .hero-eyebrow   { font-size: clamp(1.1rem, 5.5vw, 1.9rem); white-space: normal; }
-    .hero-sub       { font-size: 1.2rem; max-width: 100%; line-height: 1.2; }
+    .hero-eyebrow   { font-size: clamp(1.1rem, 5.5vw, 1.6rem); white-space: normal; }
+    .hero-sub       { font-size: .9rem; max-width: 100%; }
     .hero-doctors   { display: none; }
     .hero-tri-top   { width: 200px; height: 200px; }
     .hero-tri-bot   { width: 180px; height: 180px; }
-	.hero-btn		{ margin: 0 auto;}
-	.srv-glow		{ display:none;}
+	.srv-glow-line { display: none;}
   }
 
   /* ── BOTÓN HERO ── */
@@ -474,8 +484,8 @@
     0%,100% { opacity: .4; } 50% { opacity: 1; }
   }
 
-  /* ── SECTION APPEAR TRANSITION ── */
-  .appear-section { opacity: 0; transform: translateY(50px); }
+  /* ── SECTION APPEAR TRANSITION — handled by section-hidden/visible ── */
+  .appear-section { /* no-op, visibility managed by JS */ }
 
   /* ── SECTION TITLE SHARED ── */
   .section-title {
@@ -492,7 +502,7 @@
   /* ── CARRUSEL DE SERVICIOS ── */
   #servicios {
     position: relative;
-    height: 105vh; min-height: 600px;
+    height: 100vh; min-height: 600px;
     overflow: hidden;
   }
 
@@ -539,20 +549,29 @@
     filter: blur(4px);
   }
 
-  /* Swiper fullscreen */
+  /* ── SLIDER MANUAL DE SERVICIOS ── */
   .services-swiper {
-    position: absolute; inset: 0; z-index: 3;
-    padding: 0 !important;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 3;
   }
-  .services-swiper .swiper-wrapper { height: 100%; }
-  .services-swiper .swiper-slide {
+  .srv-slides-track {
+    position: relative;
+    width: 100%; height: 100%;
+  }
+  .srv-slide {
+    position: absolute;
+    inset: 0;
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    opacity: 0 !important;
-    transition: opacity .9s cubic-bezier(.4,0,.2,1) !important;
+    opacity: 0;
+    transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
   }
-  .services-swiper .swiper-slide-active {
-    opacity: 1 !important;
+  .srv-slide.active {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   /* Layout interior del slide */
@@ -569,10 +588,10 @@
   .srv-col-left {
     display: flex; flex-direction: column;
     align-items: center; gap: 28px;
-    padding: 0 100px;
+    padding: 0 24px;
   }
   .srv-icon-wrap {
-    width: 100px; height: 100px;
+    width: 100px;  height: 100px;
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 8px;
   }
@@ -635,7 +654,7 @@
   .srv-col-right {
     display: flex; flex-direction: column;
     align-items: center; gap: 28px;
-    padding: 0 100px;
+    padding: 0 24px;
     text-align: right;
   }
   .srv-col-right .srv-icon-wrap { margin-left: 0; }
@@ -690,16 +709,16 @@
 
   /* Responsive */
   @media (max-width: 900px) {
-    #servicios { height: auto; min-height: 105vh; }
+    #servicios { height: auto; min-height: 100vh; }
     .srv-slide-inner {
       grid-template-columns: 1fr;
       grid-template-rows: auto auto auto;
-      padding: 150px 24px 120px;
+      padding: 100px 24px 120px;
       gap: 36px;
       text-align: center;
     }
     .srv-col-left  { align-items: center; padding-right: 0 50px; }
-    .srv-col-right { align-items: center; padding-left: 25%; text-align: center; }
+    .srv-col-right { align-items: center; padding-left: 0; text-align: center; }
     .srv-col-right .srv-icon-wrap { margin: 0 auto; }
   }
 
@@ -715,308 +734,431 @@
     background: linear-gradient(90deg, var(--blue-mid), var(--gold), var(--blue-mid));
   }
 
-  .quienes-header {
-    text-align: center; margin-bottom: 48px;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-style: italic;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    color: var(--blue-deep);
-    font-weight: 400;
+  /* ── QUIENES SOMOS ── */
+  #quienes {
+    position: relative;
+    height: 100vh; min-height: 600px;
+    overflow: hidden;
   }
 
-  .quienes-swiper {
-    max-width: 1100px; margin: 0 auto;
-    padding: 0 60px !important;
+  /* Fondo fijo full pantalla con overlay */
+  .quienes-bg {
+    position: absolute; inset: 0; z-index: 0;
   }
-  .quienes-slide {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 48px; align-items: center;
-    border-radius: 24px;
+  .quienes-bg img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(1) saturate(.55);
+  }
+  .quienes-bg-overlay {
+    position: absolute; inset: 0;
+
+  }
+
+  /* Título superior */
+  .quienes-header {
+    position: absolute;
+    top: 7%; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    color: var(--blue-deep);
+    z-index: 4;
+    pointer-events: none;
+  }
+  .quienes-header em { font-style: normal; }
+
+  /* Slider container */
+  .quienes-slider {
+    position: absolute;
+    top: 19%; left: 0; right: 0;
+    bottom: 15%;
+    z-index: 3;
     overflow: hidden;
-    background: white;
-    box-shadow: 0 8px 40px rgba(21,101,232,.1);
+	background-color: #152e7e;
   }
+
+  /* Cada slide */
+  .quienes-slide {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    opacity: 0;
+    transition: opacity 0.85s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+  }
+  .quienes-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Foto izquierda con difuminado */
   .quienes-img-wrap {
-    height: 400px; position: relative; overflow: hidden;
-    background: linear-gradient(135deg, #1a3a9e, #0a1a5c);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
   }
   .quienes-img-wrap img {
-    width: 100%; height: 100%; object-fit: cover;
-    opacity: .75; mix-blend-mode: luminosity;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
-  .quienes-img-overlay {
+  /* Difuminado que se funde con el fondo a la derecha */
+  .quienes-img-wrap::after {
+    content: '';
     position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(10,26,92,.6) 0%, rgba(21,101,232,.25) 100%);
+    background:
+      linear-gradient(to right,  transparent 40%, rgba(21,46,126,1) 100%),
+      linear-gradient(to bottom, rgba(21,46,126,.3) 0%, transparent 20%, transparent 80%, rgba(21,46,126,.5) 100%);
   }
-  .quienes-text { padding: 40px 40px 40px 0; }
+
+  /* Texto derecha */
+  .quienes-text {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 40px 8% 40px 5%;
+    color: var(--white);
+  }
   .quienes-text-title {
-    font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.6rem);
-    color: var(--blue-deep); margin-bottom: 16px; line-height: 1.25;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1rem, 1.8vw, 1.45rem);
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 20px;
+	font-style: normal;
   }
   .quienes-text-title em {
-    font-family: 'Roboto Condensed', sans-serif;
-    font-style: italic; font-weight: 400;
-    color: var(--blue-bright);
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--white);
   }
   .quienes-text p {
-    font-size: .92rem; color: #374151; line-height: 1.8;
-    margin-bottom: 24px;
+    font-size: clamp(.8rem, 1.1vw, .92rem);
+    color: var(--text-body);
+    line-height: 1.85;
+    margin-bottom: 28px;
   }
   .quienes-btn {
     display: inline-block;
+    align-self: flex-start;
     padding: 12px 32px;
-    border: 1.5px solid var(--blue-mid);
+    border: 1.5px solid rgba(255,255,255,.45);
     border-radius: 6px;
     font-family: 'Roboto Condensed', sans-serif;
     font-style: italic;
     font-size: 1rem;
-    color: var(--blue-mid);
+    color: var(--white);
     text-decoration: none;
     transition: all .3s ease;
-    position: relative; overflow: hidden;
     cursor: none;
+    position: relative; overflow: hidden;
   }
   .quienes-btn::before {
     content: ''; position: absolute; inset: 0;
-    background: var(--blue-mid); transform: scaleX(0); transform-origin: left;
+    background: rgba(255,255,255,.1);
+    transform: scaleX(0); transform-origin: left;
     transition: transform .35s ease; z-index: -1;
   }
-  .quienes-btn:hover { color: white; border-color: var(--blue-mid); }
+  .quienes-btn:hover { border-color: var(--white); }
   .quienes-btn:hover::before { transform: scaleX(1); }
 
+  /* Flechas de navegación */
   .quienes-nav {
-    display: flex; align-items: center; justify-content: center; gap: 16px;
-    margin-top: 32px;
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    transform: translateY(-50%);
+    display: flex; justify-content: space-between;
+    padding: 0 2%;
+    z-index: 5; pointer-events: none;
   }
   .quienes-nav-btn {
     width: 44px; height: 44px;
-    border: 1.5px solid var(--blue-mid); border-radius: 50%;
-    background: transparent; color: var(--blue-mid);
+    border: 1.5px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    background: rgba(5,14,61,.4);
+    backdrop-filter: blur(8px);
+    color: white;
     font-size: 1.2rem; cursor: none;
     display: flex; align-items: center; justify-content: center;
     transition: all .3s ease;
-  }
-  .quienes-nav-btn:hover { background: var(--blue-mid); color: white; }
-
-  /* ── SESIONES ── */
-  #sesiones {
-    background: linear-gradient(160deg, #06174a 0%, #0d2878 50%, #06174a 100%);
-    padding: 80px 0 100px;
-    position: relative; overflow: hidden;
-  }
-  #sesiones::before {
-    content: '';
-    position: absolute; top: -200px; right: -200px;
-    width: 500px; height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(245,166,35,.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .sesiones-header {
-    text-align: center; max-width: 900px; margin: 0 auto 48px;
-    padding: 0 24px;
-  }
-  .sesiones-sub {
-    font-size: clamp(.9rem, 1.5vw, 1.05rem);
-    color: var(--text-body); line-height: 1.7;
-  }
-
-  .sesiones-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    max-width: 1100px; margin: 0 auto;
-    padding: 0 40px;
-  }
-  .session-card {
-    position: relative; border-radius: 16px; overflow: hidden;
-    aspect-ratio: 3/4; cursor: none;
-    transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
-  }
-  .session-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(0,0,0,.4);
-  }
-  .session-card img {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform .6s ease;
-    filter: brightness(.85);
-  }
-  .session-card:hover img { transform: scale(1.06); filter: brightness(.7); }
-
-  .session-badge {
-    position: absolute; top: 14px; left: 14px;
-    background: var(--gold); color: #1a0000;
-    font-weight: 800; font-size: .7rem; letter-spacing: .06em;
-    padding: 4px 10px; border-radius: 20px;
-    text-transform: uppercase; z-index: 2;
-  }
-
-  .session-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 40%, rgba(0,10,50,.92) 100%);
-    z-index: 1;
-  }
-  .session-info {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 20px; z-index: 2;
-  }
-  .session-meta {
-    font-size: .72rem; color: rgba(255,255,255,.6);
-    font-family: 'Roboto Condensed', sans-serif; font-style: italic;
-    margin-bottom: 4px;
-  }
-  .session-title {
-    font-weight: 800; font-size: .95rem; color: white;
-    line-height: 1.3;
-  }
-  .session-logo {
-    position: absolute; bottom: 16px; right: 16px;
-    width: 32px; height: 32px; z-index: 3; opacity: .7;
-  }
-
-  /* Popup overlay */
-  .session-popup {
-    position: absolute; inset: 0; z-index: 10;
-    background: rgba(10,26,92,.92);
-    backdrop-filter: blur(8px);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 24px; text-align: center;
-    opacity: 0; transform: scale(.96);
-    transition: opacity .35s ease, transform .35s ease;
-    pointer-events: none;
-  }
-  .session-card:hover .session-popup {
-    opacity: 1; transform: scale(1);
     pointer-events: auto;
   }
-  .popup-play {
-    width: 56px; height: 56px;
-    border: 2px solid var(--gold);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 16px;
-    font-size: 1.4rem;
-    color: var(--gold);
-    transition: background .3s, transform .3s;
-  }
-  .session-card:hover .popup-play { background: rgba(245,166,35,.15); transform: scale(1.1); }
-  .popup-title {
-    font-weight: 800; font-size: .95rem; margin-bottom: 8px;
-    color: white; line-height: 1.3;
-  }
-  .popup-meta { font-size: .75rem; color: var(--blue-light); font-style: italic; }
-
-  /* ── CTA ── */
-  #cta {
-    padding: 120px 40px;
-    text-align: center;
-    background: linear-gradient(135deg, #c89000 0%, #e8a800 40%, #c07000 100%);
-    position: relative; overflow: hidden;
-  }
-  #cta::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
-    opacity: .5;
-  }
-  .cta-title {
-    font-weight: 800; font-size: clamp(1.8rem, 4vw, 3rem);
-    color: white; margin-bottom: 32px; position: relative; z-index: 1;
-  }
-  .cta-btn {
-    display: inline-block;
-    padding: 16px 48px;
-    border: 2px solid white;
-    border-radius: 6px;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-style: italic; font-size: 1.15rem;
-    color: white; text-decoration: none;
-    position: relative; z-index: 1; overflow: hidden;
-    transition: color .35s;
-    cursor: none;
-    background: rgba(255,255,255,.1);
-    backdrop-filter: blur(6px);
-  }
-  .cta-btn::before {
-    content: ''; position: absolute; inset: 0;
-    background: white; transform: scaleX(0); transform-origin: left;
-    transition: transform .4s ease; z-index: -1;
-  }
-  .cta-btn:hover { color: #a06000; }
-  .cta-btn:hover::before { transform: scaleX(1); }
-
-  /* ── FOOTER ── */
-  footer {
-    background: linear-gradient(160deg, #0e2060 0%, #0a1a5c 100%);
-    padding: 60px 40px 30px;
-    position: relative;
-  }
-  footer::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
-  .footer-grid {
-    max-width: 1100px; margin: 0 auto;
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 48px; align-items: start;
-    margin-bottom: 48px;
-  }
-  .footer-brand .footer-logo { width: 200px; margin-bottom: 12px; }
-  .footer-tagline {
-    font-family: 'Roboto Condensed', sans-serif;
-    font-style: italic; color: var(--blue-light);
-    font-size: .95rem; margin-bottom: 16px;
-  }
-  .footer-address { font-size: .82rem; color: var(--text-body); line-height: 1.8; }
-
-  .footer-social {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  }
-  .footer-social-label {
-    font-family: 'Roboto Condensed', sans-serif;
-    font-style: italic;
-    font-size: 1rem; color: var(--text-body); width: 100%;
-    margin-bottom: 8px;
-  }
-  .footer-social-label strong { color: var(--white); font-weight: 800; }
-  .social-icon {
-    width: 44px; height: 44px; border-radius: 50%;
-    border: 1.5px solid rgba(255,255,255,.2);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--gold); font-size: 1.1rem;
-    text-decoration: none;
-    transition: all .3s; cursor: none;
-  }
-  .social-icon:hover {
-    background: var(--gold); color: var(--blue-deep);
-    border-color: var(--gold);
-    transform: translateY(-3px);
+  .quienes-nav-btn:hover {
+    background: rgba(255,255,255,.15);
+    border-color: rgba(255,255,255,.7);
   }
 
-  .footer-links h4 {
-    font-weight: 800; font-size: .8rem;
-    letter-spacing: .12em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 16px;
+  /* Scroll indicator quienes */
+  .quienes-scroll-indicator {
+    position: absolute; bottom: 5%; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    z-index: 4; opacity: .6;
   }
-  .footer-links a {
-    display: block; font-size: .9rem;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-style: italic;
-    color: var(--text-body); text-decoration: none;
-    padding: 6px 0;
-    transition: color .25s, padding-left .25s;
-  }
-  .footer-links a:hover { color: var(--white); padding-left: 8px; }
 
-  .footer-bottom {
-    max-width: 1100px; margin: 0 auto;
-    border-top: 1px solid rgba(255,255,255,.08);
-    padding-top: 24px;
-    font-size: .78rem; color: rgba(255,255,255,.35);
+  @media (max-width: 900px) {
+    .quienes-slider { top: 15%; }
+    .quienes-slide { grid-template-columns: 1fr; }
+    .quienes-img-wrap { height: 40%; }
+    .quienes-img-wrap::after {
+      background: linear-gradient(to bottom, transparent 50%, rgba(5,14,61,.95) 100%);
+    }
+    .quienes-text { padding: 24px; }
   }
+
+  /* ── SESIONES ── */
+  .sesiones{
+  position:relative;
+  padding:80px 24px;
+  overflow:hidden;
+  isolation:isolate;
+}
+.sesiones-bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  z-index:-2;
+}
+.sesiones-overlay{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(10,30,80,.85), rgba(10,30,80,.75));
+  z-index:-1;
+}
+.sesiones-inner{ max-width:1200px; margin:0 auto; }
+.sesiones-title{
+  color:#fff;
+  text-align:center;
+  font-size:clamp(18px, 2vw, 24px);
+  font-weight:600;
+  line-height:1.4;
+  max-width:900px;
+  margin:0 auto 48px;
+  text-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+
+.sesiones-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:28px;
+}
+@media (max-width: 900px){ .sesiones-grid{ grid-template-columns:1fr; } }
+
+.sesion-card{
+  position:relative;
+  display:block;
+  text-decoration:none;
+  border-radius:6px;
+  overflow:hidden;
+  background:#0a2255;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  transition:transform .35s ease, box-shadow .35s ease;
+  cursor:pointer;
+}
+.sesion-card:hover,
+.sesion-card:focus-visible{
+  transform:translateY(-8px) scale(1.03);
+  box-shadow:0 20px 40px rgba(0,0,0,.45), 0 0 0 2px rgba(255,200,0,.6);
+}
+
+.sesion-tag{
+  position:absolute;
+  top:14px; left:14px;
+  background:#ffc400;
+  color:#0a2255;
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:.08em;
+  padding:6px 16px;
+  border-radius:2px;
+  z-index:2;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+
+.sesion-img{
+  height: 430px;        /* sube la foto para llenar la tarjeta */
+  object-fit: cover;
+}
+
+.sesion-caption{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  background:#0a2255;
+  color:#fff;
+}
+.sesion-caption-text{ display:flex; flex-direction:column; gap:4px; }
+.sesion-meta{ font-size:13px; opacity:.9; }
+.sesion-title-card{ font-size:16px; font-weight:500; }
+.sesion-icon{
+  width:28px; height:28px;
+  color:#fff;
+  opacity:.85;
+  flex-shrink:0;
+  transition:opacity .25s ease, transform .25s ease;
+}
+.sesion-card:hover .sesion-icon{ opacity:1; transform:scale(1.1); }
+
+
+  /* ── CTA + FOOTER (una sola sección, mitad/mitad) ── */
+footer {
+  height: 100vh;
+  min-height: 720px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, #0e2060 0%, #0a1a5c 100%);
+  position: relative;
+  overflow: hidden;
+}
+footer::before {
+  content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  z-index: 2; display:none;
+}
+
+#cta {
+  flex: 0 0 50%;
+  height: 50%;
+  min-height: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  position: relative; overflow: hidden;
+}
+#cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url('cta-educa-26.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+#cta::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(200,144,0,.85) 0%, rgba(232,168,0,.8) 40%, rgba(192,112,0,.88) 100%),
+              url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.cta-title {
+  font-weight: 800; font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  color: white; margin: 0 0 24px; position: relative; z-index: 1;
+}
+.cta-btn {
+  display: inline-block;
+  padding: 14px 44px;
+  border: 2px solid white;
+  border-radius: 6px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-style: italic; font-size: 1.1rem;
+  color: white; text-decoration: none;
+  position: relative; z-index: 1; overflow: hidden;
+  transition: color .35s;
+  cursor: none;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(6px);
+}
+.cta-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: white; transform: scaleX(0); transform-origin: left;
+  transition: transform .4s ease; z-index: -1;
+}
+.cta-btn:hover { color: #a06000; }
+.cta-btn:hover::before { transform: scaleX(1); }
+
+.footer-inner {
+  flex: 1 1 50%;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 48px 20px;
+  box-sizing: border-box;
+}
+.footer-grid {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto 24px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+.footer-brand { width: 100%; }
+.footer-brand .footer-logo {
+  width: 95%;
+  max-width: 360px;
+  height: auto;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.footer-tagline {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-style: italic; color: var(--blue-light);
+  font-size: .95rem; margin-bottom: 16px;
+}
+.footer-address { font-size: .82rem; color: var(--text-body); line-height: 1.7; }
+
+.footer-social { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.footer-social-label {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-style: italic;
+  font-size: 1rem; color: var(--text-body); width: 100%;
+  margin-bottom: 8px;
+}
+.footer-social-label strong { color: var(--white); font-weight: 800; }
+.social-icon {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 1.05rem;
+  text-decoration: none;
+  transition: all .3s; cursor: none;
+}
+.social-icon:hover {
+  background: var(--gold); color: var(--blue-deep);
+  border-color: var(--gold);
+  transform: translateY(-3px);
+}
+
+.footer-links h4 {
+  font-weight: 800; font-size: .8rem;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.footer-links a {
+  display: block; font-size: .9rem;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-style: italic;
+  color: var(--text-body); text-decoration: none;
+  padding: 5px 0;
+  transition: color .25s, padding-left .25s;
+}
+.footer-links a:hover { color: var(--white); padding-left: 8px; }
+
+.footer-bottom {
+  max-width: 1400px; width: 100%; margin: 0 auto;
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 16px;
+  font-size: .78rem; color: rgba(255,255,255,.35);
+  text-align: center;
+}
+
 
   /* ── PARTICLES CANVAS ── */
   #particles-canvas {
@@ -1030,11 +1172,16 @@
     .hero-right { display: none; }
     .quienes-slide { grid-template-columns: 1fr; }
     .quienes-img-wrap { height: 250px; }
-    .quienes-text { padding: 30px; }
+    .quienes-text { padding: 30px 60px; line-height:2;  }
     .sesiones-grid { grid-template-columns: 1fr 1fr; }
     .footer-grid { grid-template-columns: 1fr; gap: 32px; }
     header { padding: 16px 20px; }
     .sesiones-grid { padding: 0 20px; }
+	  footer { height: auto; min-height: 0; }
+  #cta { flex: 0 0 auto; height: auto; padding: 80px 24px; }
+  .footer-inner { padding: 40px 24px 20px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  
   }
   @media (max-width: 600px) {
     .sesiones-grid { grid-template-columns: 1fr; }
@@ -1075,7 +1222,6 @@
     <svg width="120" height="60" viewBox="0 0 120 60" fill="none">
       <circle cx="30" cy="30" r="28" stroke="white" stroke-width="1.5" opacity=".4"/>
       <polygon points="24,18 24,42 44,30" fill="#f5a623"/>
-      <text x="54" y="38" fill="white" font-family="Outfit" font-size="22" font-weight="800">EDUCA</text>
     </svg>
   </div>
   <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
@@ -1118,6 +1264,9 @@
     Todos los contenidos publicados en este sitio web (incluyendo textos, imágenes, gráficos, logotipos, código fuente) son propiedad intelectual de Iderma Capilar Educa o de sus creadores originales. Queda estrictamente prohibida la reproducción, distribución, modificación o transmisión total o parcial de este contenido sin la autorización previa y por escrito del titular.
   </div>
 </div>
+
+<!-- ══ SCROLL CONTAINER ══ -->
+<div id="scroll-container">
 
 <!-- ══════════════════ HERO ══════════════════ -->
 <section id="hero">
@@ -1169,7 +1318,7 @@
 
   <!-- Fondo foto + overlay -->
   <div class="srv-bg">
-    <img src="fondo-servicios-iced-gradient.png" alt="" />
+    <img src="fondo-servicios-iced.png" alt="" />
     <div class="srv-bg-overlay"></div>
   </div>
 
@@ -1183,12 +1332,12 @@
     <div class="srv-glow-blur"></div>
   </div>
 
-  <!-- Swiper -->
-  <div class="swiper services-swiper" id="services-swiper">
-    <div class="swiper-wrapper">
+  <!-- Slider manual de servicios -->
+  <div class="services-swiper" id="services-swiper">
+    <div class="srv-slides-track" id="srv-track">
 
       <!-- SLIDE 1 -->
-      <div class="swiper-slide">
+      <div class="srv-slide active" data-slide="0">
         <div class="srv-slide-inner">
           <!-- Izquierda -->
           <div class="srv-col-left">
@@ -1227,7 +1376,7 @@
       </div>
 
       <!-- SLIDE 2 -->
-      <div class="swiper-slide">
+      <div class="srv-slide" data-slide="1">
         <div class="srv-slide-inner">
           <div class="srv-col-left">
             <div class="srv-icon-wrap">
@@ -1258,7 +1407,7 @@
       </div>
 
       <!-- SLIDE 3 -->
-      <div class="swiper-slide">
+      <div class="srv-slide" data-slide="2">
         <div class="srv-slide-inner">
           <div class="srv-col-left">
             <div class="srv-icon-wrap">
@@ -1289,8 +1438,8 @@
         </div>
       </div>
 
-    </div><!-- /swiper-wrapper -->
-  </div><!-- /swiper -->
+    </div><!-- /srv-slides-track -->
+  </div><!-- /services-swiper -->
 
   <!-- Scroll indicator -->
   <div class="srv-scroll-indicator">
@@ -1310,50 +1459,153 @@
 </section>
 
 <!-- ══════════════════ QUIENES SOMOS ══════════════════ -->
-<section id="quienes" class="appear-section">
+<section id="quienes">
+
+  <!-- Fondo full pantalla + overlay -->
+  <div class="quienes-bg">
+    <img src="fondo-quienes-iced.png" alt="" />
+    <div class="quienes-bg-overlay"></div>
+  </div>
+
+  <!-- Título -->
   <h2 class="quienes-header">
     <em>Salud, Ciencia y Conciencia</em>
   </h2>
-  <div class="swiper quienes-swiper" id="quienes-swiper">
-    <div class="swiper-wrapper" id="quienes-wrapper">
-      <!-- Slides generated by JS -->
+
+  <!-- Slider -->
+  <div class="quienes-slider" id="quienes-slider">
+
+    <!-- SLIDE 1 -->
+    <div class="quienes-slide active">
+      <div class="quienes-img-wrap">
+        <img src="iced-1903-1.png" alt="Producción ICED" />
+      </div>
+      <div class="quienes-text">
+        <div class="quienes-text-title"><em>En Iderma Capilar Educa</em> <strong>compartimos conocimiento y experiencia.</strong></div>
+        <p>Propiciamos que el conocimiento científico se integre cada vez más en la vida cotidiana, motivando a nuestra comunidad a priorizar el cuidado personal, la prevención y el bienestar consciente, generando un impacto positivo y duradero en la vida de las personas. </p>
+        <a href="#" class="quienes-btn">Ver más</a>
+      </div>
     </div>
-  </div>
+
+    <!-- SLIDE 2 -->
+    <div class="quienes-slide">
+      <div class="quienes-img-wrap">
+        <img src="doctores-iced.png" alt="Especialistas ICED" />
+      </div>
+      <div class="quienes-text">
+        <div class="quienes-text-title">Nuestra misión es <em>acercar la ciencia</em> <strong>a la vida diaria de las personas.</strong></div>
+        <p>Inspiramos a nuestra comunidad a cuidarse, prevenir y vivir con propósito. Trabajamos junto a expositores nacionales e internacionales para llevar el conocimiento médico más actualizado directamente a quienes más lo necesitan, con claridad, pasión y compromiso.</p>
+        <a href="#" class="quienes-btn">Ver más</a>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="quienes-slide">
+      <div class="quienes-img-wrap">
+        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=900&q=80&fit=crop" alt="Comunidad ICED" />
+      </div>
+      <div class="quienes-text">
+        <div class="quienes-text-title">Creemos en el poder <em>transformador</em> <strong>del conocimiento compartido.</strong></div>
+        <p>Cada sesión, cada capítulo, cada expositor suma a una comunidad que crece, aprende y se cuida. Iderma Capilar Educa es el espacio donde la ciencia y la conciencia se encuentran para construir una vida más plena y con propósito.</p>
+        <a href="#" class="quienes-btn">Ver más</a>
+      </div>
+    </div>
+
+  </div><!-- /quienes-slider -->
+
+  <!-- Flechas -->
   <div class="quienes-nav">
     <button class="quienes-nav-btn" id="quienes-prev">&#8592;</button>
     <button class="quienes-nav-btn" id="quienes-next">&#8594;</button>
   </div>
+
+  <!-- Scroll indicator -->
+  <div class="quienes-scroll-indicator">
+    <div class="srv-scroll-mouse"></div>
+    <div class="srv-chevrons"><span></span><span></span><span></span></div>
+  </div>
+
 </section>
 
 <!-- ══════════════════ SESIONES ══════════════════ -->
-<section id="sesiones" class="appear-section">
-  <div class="sesiones-header">
-    <p class="sesiones-sub">Especialistas comparten conocimientos, experiencias y avances médicos para inspirar hábitos saludables, prevención y bienestar integral en nuestra comunidad.</p>
-  </div>
-  <div class="sesiones-grid" id="sesiones-grid">
-    <!-- Cards generated by JS -->
+<section id="sesiones" class="sesiones">
+  <!-- Fondo de video -->
+  <video class="sesiones-bg" autoplay muted loop playsinline preload="auto">
+    <source src="pere-azucar-iced-web.mp4" type="video/mp4">
+  </video>
+  <div class="sesiones-overlay"></div>
+
+  <div class="sesiones-inner">
+    <h2 class="sesiones-title">Especialistas comparten conocimientos, experiencias y avances médicos para inspirar hábitos saludables, prevención y bienestar integral en nuestra comunidad.</h2>
+
+    <div class="sesiones-grid">
+      <!-- Tarjeta 1 -->
+      <a href="https://tu-enlace-1.com" class="sesion-card" target="_blank" rel="noopener">
+        <span class="sesion-tag">NUEVO</span>
+        <img class="sesion-img" src="cordova.png" alt="Sesión 1">
+        <div class="sesion-caption">
+          <div class="sesion-caption-text">
+            <span class="sesion-meta">C3 S11 | 10/05/2026</span>
+            <span class="sesion-title-card">Glucosa, Presión y Colesterol</span>
+          </div>
+          <svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10,8 16,12 10,16" fill="currentColor"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Tarjeta 2 -->
+      <a href="https://tu-enlace-2.com" class="sesion-card" target="_blank" rel="noopener">
+        <span class="sesion-tag">NUEVO</span>
+        <img class="sesion-img" src="arias.png" alt="Sesión 2">
+        <div class="sesion-caption">
+          <div class="sesion-caption-text">
+            <span class="sesion-meta">C3 S11 | 10/05/2026</span>
+            <span class="sesion-title-card">Glucosa, Presión y Colesterol</span>
+          </div>
+          <svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10,8 16,12 10,16" fill="currentColor"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Tarjeta 3 -->
+      <a href="https://tu-enlace-3.com" class="sesion-card" target="_blank" rel="noopener">
+        <span class="sesion-tag">NUEVO</span>
+        <img class="sesion-img" src="torres-gil.png" alt="Sesión 3">
+        <div class="sesion-caption">
+          <div class="sesion-caption-text">
+            <span class="sesion-meta">C3 S11 | 10/05/2026</span>
+            <span class="sesion-title-card">Glucosa, Presión y Colesterol</span>
+          </div>
+          <svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="10,8 16,12 10,16" fill="currentColor"/>
+          </svg>
+        </div>
+      </a>
+    </div>
   </div>
 </section>
 
-<!-- ══════════════════ CTA ══════════════════ -->
-<section id="cta" class="appear-section">
-  <h2 class="cta-title">¿Quieres formar parte de esta iniciativa?</h2>
-  <a href="#footer" class="cta-btn">Más información</a>
-</section>
 
-<!-- ══════════════════ FOOTER ══════════════════ -->
+<!-- ══════════════════ FOOTER (incluye CTA) ══════════════════ -->
 <footer id="footer">
+  <div id="cta" class="appear-section">
+    <h2 class="cta-title">¿Quieres formar parte de esta iniciativa?</h2>
+    <a href="#footer" class="cta-btn">Más información</a>
+  </div>
+  <div class="footer-inner">
   <div class="footer-grid">
     <div class="footer-brand">
       <div style="margin-bottom:12px;display:flex;align-items:center;gap:10px;">
-        <div style="width:50px;height:50px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;">
-          <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
-            <polygon points="14,10 14,38 36,24" fill="#f5a623"/>
-          </svg>
-        </div>
+        <a href="#hero" class="footer-brand-link" style="display:block;margin-bottom:12px;">
+			<img src="logotipo-iderma-educa-footer.png" alt="Iderma Capilar Educa" class="footer-logo" />
+			</a>
         <div>
-          <div style="font-size:.6rem;letter-spacing:.2em;color:rgba(255,255,255,.45);text-transform:uppercase;">Iderma Capilar</div>
-          <div style="font-weight:800;font-size:1.4rem;letter-spacing:.08em;color:white;">EDUCA</div>
+          
         </div>
       </div>
       <div class="footer-tagline">Salud, Ciencia y Conciencia</div>
@@ -1365,7 +1617,7 @@
 
     <div>
       <div class="footer-social">
-        <div class="footer-social-label">Síguenos en nuestras <strong>redes sociales</strong></div>
+        <div class="footer-social-label">Síguenos:</div>
         <a href="#" class="social-icon" title="Facebook">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
         </a>
@@ -1396,7 +1648,10 @@
   <div class="footer-bottom">
     © 2026 - IDERMA CAPILAR EDUCA. Derechos reservados del Autor.
   </div>
+  </div>
 </footer>
+
+</div><!-- /scroll-container -->
 
 <!-- ══════════════════ JAVASCRIPT ══════════════════ -->
 <script>
@@ -1488,214 +1743,178 @@ const animParticles = () => {
 };
 animParticles();
 
-// ── FULLPAGE SCROLL SYSTEM ──
-// Secciones: hero (0) → servicios (1) → quienes (2) → sesiones (3) → cta (4)
-const sections = ['#hero','#servicios','#quienes','#sesiones','#cta','#footer'];
+// ══════════════════════════════════════════════
+// FULLPAGE SCROLL — lerp + 2 ticks de rueda
+// ══════════════════════════════════════════════
+
+const sections    = ['#hero','#servicios','#quienes','#sesiones','#footer'];
+const sectionEls  = sections.map(s => document.querySelector(s));
+const container   = document.getElementById('scroll-container');
+
 let currentSection = 0;
-let isScrolling = false;
-let srvSwiperReady = false;
+let targetY        = 0;
+let currentY       = 0;
+const LERP         = 0.07;
+let lerpRaf        = null;
+let wheelCooldown  = false;
 
-// Deshabilitar scroll nativo
-document.body.style.overflow = 'hidden';
-document.documentElement.style.overflow = 'hidden';
-
-function goToSection(index, smooth = true) {
-  if (index < 0 || index >= sections.length) return;
-  currentSection = index;
-  const el = document.querySelector(sections[index]);
-  if (!el) return;
-  el.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant' });
+function getSectionY(index) {
+  let y = 0;
+  for (let i = 0; i < index; i++) {
+    y += sectionEls[i] ? sectionEls[i].offsetHeight : window.innerHeight;
+  }
+  return y;
 }
 
-// ── SERVICES SWIPER — fade ultra sensible ──
-const servSwiper = new Swiper('#services-swiper', {
-  slidesPerView: 1,
-  effect: 'fade',
-  fadeEffect: { crossFade: true },
-  speed: 750,
-  allowTouchMove: true,
-  on: {
-    slideChange: function () {
-      document.querySelectorAll('.srv-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === this.activeIndex);
-      });
-    }
+function lerpLoop() {
+  currentY += (targetY - currentY) * LERP;
+  if (Math.abs(targetY - currentY) < 0.5) currentY = targetY;
+  container.style.transform = `translateY(${-currentY}px)`;
+  if (Math.abs(targetY - currentY) > 0.1) {
+    lerpRaf = requestAnimationFrame(lerpLoop);
+  } else {
+    lerpRaf = null;
   }
-});
-srvSwiperReady = true;
+}
 
-// Dots click
+function goToSection(index, instant) {
+  if (index < 0 || index >= sections.length) return;
+  currentSection = index;
+  targetY = getSectionY(index);
+  if (instant) {
+    currentY = targetY;
+    container.style.transform = `translateY(${-currentY}px)`;
+    return;
+  }
+  if (lerpRaf) cancelAnimationFrame(lerpRaf);
+  lerpLoop();
+}
+
+// ── SLIDER MANUAL DE SERVICIOS ──
+const srvSlides = Array.from(document.querySelectorAll('.srv-slide'));
+let srvActiveIndex = 0;
+
+const servSwiper = {
+  activeIndex: 0,
+  slides: { length: srvSlides.length },
+  slideNext() {
+    if (this.activeIndex < srvSlides.length - 1) {
+      srvSlides[this.activeIndex].classList.remove('active');
+      this.activeIndex++;
+      srvSlides[this.activeIndex].classList.add('active');
+      updateSrvDots(this.activeIndex);
+    }
+  },
+  slidePrev() {
+    if (this.activeIndex > 0) {
+      srvSlides[this.activeIndex].classList.remove('active');
+      this.activeIndex--;
+      srvSlides[this.activeIndex].classList.add('active');
+      updateSrvDots(this.activeIndex);
+    }
+  },
+  slideTo(index, speed) {
+    srvSlides[this.activeIndex].classList.remove('active');
+    this.activeIndex = index;
+    srvSlides[this.activeIndex].classList.add('active');
+    updateSrvDots(this.activeIndex);
+  }
+};
+
+function updateSrvDots(index) {
+  document.querySelectorAll('.srv-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === index);
+  });
+}
+
 document.querySelectorAll('.srv-dot').forEach((dot, i) => {
   dot.addEventListener('click', () => servSwiper.slideTo(i));
 });
 
-// ── BOTÓN HERO — scroll instantáneo a servicios ──
-document.getElementById('he4').addEventListener('click', (e) => {
-  e.preventDefault();
-  currentSection = 1;
-  document.querySelector('#servicios').scrollIntoView({ behavior: 'smooth' });
+// ── BOTÓN HERO ──
+document.getElementById('he4').addEventListener('click', e => {
+  e.preventDefault(); goToSection(1);
 });
 
-// ── WHEEL HANDLER ──
-let wheelAccum = 0;
-const WHEEL_THRESHOLD = 220; // sensibilidad: menor = más sensible
-let wheelCooldown = false;
-
-window.addEventListener('wheel', (e) => {
-  e.preventDefault();
-
-  if (wheelCooldown) return;
-
-  const delta = e.deltaY || e.detail || e.wheelDelta;
-  wheelAccum += delta;
-
-  if (Math.abs(wheelAccum) < WHEEL_THRESHOLD) return;
-  const dir = wheelAccum > 0 ? 1 : -1;
-  wheelAccum = 0;
-
-  // Si estamos en servicios (sección 1), primero ciclar slides
+// ── NAVEGACIÓN CENTRAL ──
+function handleNav(dir) {
   if (currentSection === 1) {
-    if (dir > 0) {
-      // hacia adelante
-      if (servSwiper.activeIndex < servSwiper.slides.length - 1) {
-        servSwiper.slideNext();
-        wheelCooldown = true;
-        setTimeout(() => { wheelCooldown = false; }, 800);
-        return;
-      }
-      // último slide → ir a siguiente sección
-    } else {
-      // hacia atrás
-      if (servSwiper.activeIndex > 0) {
-        servSwiper.slidePrev();
-        wheelCooldown = true;
-        setTimeout(() => { wheelCooldown = false; }, 800);
-        return;
-      }
-      // primer slide → ir a sección anterior
+    if (dir > 0 && servSwiper.activeIndex < servSwiper.slides.length - 1) {
+      servSwiper.slideNext();
+      wheelCooldown = true; setTimeout(() => { wheelCooldown = false; }, 800); return;
+    }
+    if (dir < 0 && servSwiper.activeIndex > 0) {
+      servSwiper.slidePrev();
+      wheelCooldown = true; setTimeout(() => { wheelCooldown = false; }, 800); return;
     }
   }
-
-  // Cambiar sección
   const next = currentSection + dir;
   if (next < 0 || next >= sections.length) return;
-
-  // Si vamos a servicios desde hero, resetear swiper al slide 0
   if (next === 1 && dir > 0) servSwiper.slideTo(0, 0);
-  // Si vamos a servicios desde quienes, ir al último slide
   if (next === 1 && dir < 0) servSwiper.slideTo(servSwiper.slides.length - 1, 0);
-
   goToSection(next);
-  wheelCooldown = true;
-  setTimeout(() => { wheelCooldown = false; }, 950);
+  wheelCooldown = true; setTimeout(() => { wheelCooldown = false; }, 950);
+}
 
+// ── WHEEL — 2 ticks ──
+let wheelTickCount = 0, wheelDir = 0, wheelTickTimer = null;
+const TICKS_NEEDED = 2, TICK_WINDOW = 400;
+
+window.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (wheelCooldown) return;
+  const dir = e.deltaY > 0 ? 1 : -1;
+  if (dir !== wheelDir) { wheelDir = dir; wheelTickCount = 0; clearTimeout(wheelTickTimer); }
+  wheelTickCount++;
+  clearTimeout(wheelTickTimer);
+  wheelTickTimer = setTimeout(() => { wheelTickCount = 0; wheelDir = 0; }, TICK_WINDOW);
+  if (wheelTickCount < TICKS_NEEDED) return;
+  wheelTickCount = 0; clearTimeout(wheelTickTimer);
+  handleNav(dir);
 }, { passive: false });
 
-// ── TOUCH HANDLER (mobile) ──
+// ── TOUCH ──
 let touchStartY = 0;
 window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
 window.addEventListener('touchend', e => {
   if (wheelCooldown) return;
   const diff = touchStartY - e.changedTouches[0].clientY;
-  if (Math.abs(diff) < 40) return;
-  const dir = diff > 0 ? 1 : -1;
-
-  if (currentSection === 1) {
-    if (dir > 0 && servSwiper.activeIndex < servSwiper.slides.length - 1) {
-      servSwiper.slideNext(); wheelCooldown = true;
-      setTimeout(() => { wheelCooldown = false; }, 800); return;
-    }
-    if (dir < 0 && servSwiper.activeIndex > 0) {
-      servSwiper.slidePrev(); wheelCooldown = true;
-      setTimeout(() => { wheelCooldown = false; }, 800); return;
-    }
-  }
-
-  const next = currentSection + dir;
-  if (next < 0 || next >= sections.length) return;
-  if (next === 1 && dir > 0) servSwiper.slideTo(0, 0);
-  if (next === 1 && dir < 0) servSwiper.slideTo(servSwiper.slides.length - 1, 0);
-  goToSection(next);
-  wheelCooldown = true;
-  setTimeout(() => { wheelCooldown = false; }, 950);
+  if (Math.abs(diff) < 50) return;
+  handleNav(diff > 0 ? 1 : -1);
 }, { passive: true });
 
-// ── KEYBOARD NAVIGATION ──
+// ── TECLADO ──
 window.addEventListener('keydown', e => {
   if (wheelCooldown) return;
   if (!['ArrowDown','ArrowUp','PageDown','PageUp','Space'].includes(e.code)) return;
   e.preventDefault();
-  const dir = ['ArrowDown','PageDown','Space'].includes(e.code) ? 1 : -1;
-
-  if (currentSection === 1) {
-    if (dir > 0 && servSwiper.activeIndex < servSwiper.slides.length - 1) {
-      servSwiper.slideNext(); wheelCooldown = true;
-      setTimeout(() => { wheelCooldown = false; }, 800); return;
-    }
-    if (dir < 0 && servSwiper.activeIndex > 0) {
-      servSwiper.slidePrev(); wheelCooldown = true;
-      setTimeout(() => { wheelCooldown = false; }, 800); return;
-    }
-  }
-
-  const next = currentSection + dir;
-  if (next < 0 || next >= sections.length) return;
-  if (next === 1 && dir > 0) servSwiper.slideTo(0, 0);
-  if (next === 1 && dir < 0) servSwiper.slideTo(servSwiper.slides.length - 1, 0);
-  goToSection(next);
-  wheelCooldown = true;
-  setTimeout(() => { wheelCooldown = false; }, 950);
+  handleNav(['ArrowDown','PageDown','Space'].includes(e.code) ? 1 : -1);
 });
 
-// Nav links — scroll a sección correcta
+// ── RESIZE ──
+window.addEventListener('resize', () => goToSection(currentSection, true));
+
+// ── NAV LINKS ──
 document.querySelectorAll('nav a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
-    const target = a.getAttribute('href');
-    const idx = sections.indexOf(target);
-    if (idx !== -1) { goToSection(idx); currentSection = idx; }
+    const idx = sections.indexOf(a.getAttribute('href'));
+    if (idx !== -1) goToSection(idx);
   });
 });
 
-// ── BUILD QUIENES SOMOS SLIDES ──
-const quienesData = [
-  {
-    title: 'En Iderma Capilar Educa <em>valoramos profundamente</em> tu generosidad al compartir conocimiento y experiencia.',
-    body: 'Tu contribución permite que el conocimiento científico se integre cada vez más en la vida cotidiana, motivando a nuestra comunidad a priorizar el cuidado personal, la prevención y el bienestar consciente. Cada acción suma en esta misión que busca generar un impacto positivo y duradero en la vida de las personas. Gracias por formar parte de este propósito que impulsa una cultura de salud, inspiración y transformación continua para quienes confían en nosotros cada día.',
-    bg: 'linear-gradient(135deg,#0a1a5c,#1565e8)',
-    emoji: '🎥'
-  },
-  {
-    title: 'Nuestra misión es <em>acercar la ciencia</em> a la vida diaria de las personas.',
-    body: 'Inspiramos a nuestra comunidad a cuidarse, prevenir y vivir con propósito. Trabajamos junto a expositores nacionales e internacionales para llevar el conocimiento médico más actualizado directamente a quienes más lo necesitan, con claridad, pasión y compromiso.',
-    bg: 'linear-gradient(135deg,#1a0a6c,#4a1565)',
-    emoji: '🌟'
-  },
-  {
-    title: 'Creemos en el poder <em>transformador</em> del conocimiento compartido.',
-    body: 'Cada sesión, cada capítulo, cada expositor suma a una comunidad que crece, aprende y se cuida. Iderma Capilar Educa es el espacio donde la ciencia y la conciencia se encuentran para construir una vida más plena.',
-    bg: 'linear-gradient(135deg,#0a3a1c,#156528)',
-    emoji: '💡'
-  }
-];
+// ── QUIENES SOMOS — slider manual ──
+const quienesSlides = Array.from(document.querySelectorAll('.quienes-slide'));
+let quienesActive = 0;
 
-const quienesWrapper = document.getElementById('quienes-wrapper');
-quienesData.forEach(q => {
-  quienesWrapper.innerHTML += `
-    <div class="swiper-slide">
-      <div class="quienes-slide">
-        <div class="quienes-img-wrap" style="background:${q.bg};">
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:6rem;">${q.emoji}</div>
-          <div class="quienes-img-overlay"></div>
-        </div>
-        <div class="quienes-text">
-          <div class="quienes-text-title">${q.title}</div>
-          <p>${q.body}</p>
-          <a href="#" class="quienes-btn">Ver más</a>
-        </div>
-      </div>
-    </div>`;
-});
+function quienesGoTo(index) {
+  quienesSlides[quienesActive].classList.remove('active');
+  quienesActive = (index + quienesSlides.length) % quienesSlides.length;
+  quienesSlides[quienesActive].classList.add('active');
+}
+
+document.getElementById('quienes-prev').addEventListener('click', () => quienesGoTo(quienesActive - 1));
+document.getElementById('quienes-next').addEventListener('click', () => quienesGoTo(quienesActive + 1));
 
 // ── BUILD SESSION CARDS ──
 const sessions = [
@@ -1750,22 +1969,24 @@ function initAnimations() {
   });
 
   // Servicios — animate inner elements on section enter
-  gsap.from('.srv-glow-line', {
-    scaleX: 0, duration: 1.2, ease: 'power3.out',
-    scrollTrigger: { trigger: '#servicios', start: 'top 80%', once: true }
-  });
-  gsap.from('.srv-col-left', {
-    opacity: 0, x: -40, duration: .9, ease: 'power3.out',
-    scrollTrigger: { trigger: '#servicios', start: 'top 75%', once: true }
-  });
-  gsap.from('.srv-col-right', {
-    opacity: 0, x: 40, duration: .9, ease: 'power3.out',
-    scrollTrigger: { trigger: '#servicios', start: 'top 75%', once: true }
-  });
-  gsap.from('.srv-col-center', {
-    opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: .2,
-    scrollTrigger: { trigger: '#servicios', start: 'top 75%', once: true }
-  });
+function animateServicios() {
+  gsap.fromTo('.srv-glow-line',
+    { scaleX: 0 },
+    { scaleX: 1, duration: 1.2, ease: 'power3.out' }
+  );
+  gsap.fromTo('.srv-col-left',
+    { opacity: 0, x: -40 },
+    { opacity: 1, x: 0, duration: .9, ease: 'power3.out' }
+  );
+  gsap.fromTo('.srv-col-right',
+    { opacity: 0, x: 40 },
+    { opacity: 1, x: 0, duration: .9, ease: 'power3.out' }
+  );
+  gsap.fromTo('.srv-col-center',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: .2 }
+  );
+}
 
   // Quienes somos swiper
   const quienesSwiper = new Swiper('#quienes-swiper', {
