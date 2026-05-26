@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Iderma Capilar Educa – Salud, Ciencia y Conciencia</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;800&family=Roboto+Condensed:ital@1&display=swap" rel="stylesheet" />
+
+<!-- Tailwind CSS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+
+<style>
+  :root {
+    --blue-deep: #0a1a5c;
+    --blue-mid: #1a3a9e;
+    --blue-bright: #1565e8;
+    --blue-light: #4fc3f7;
+    --gold: #f5a623;
+    --gold-light: #ffd166;
+    --white: #ffffff;
+    --gray-light: #e8eaf0;
+    --text-body: #cdd8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    background: var(--blue-deep);
+    color: var(--white);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform .1s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(245,166,35,.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: all .18s ease;
+  }
+
+  /* ── SCROLL-BAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--blue-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background .4s ease, backdrop-filter .4s ease;
+  }
+  header.scrolled {
+    background: rgba(10,26,92,.7);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .logo-wrap { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(8px);
+  }
+  .logo-icon svg { width: 32px; height: 32px; }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    cursor: none;
+    width: 44px; height: 44px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+    border: none; background: none; padding: 4px; z-index: 1100;
+  }
+  .hamburger span {
+    display: block; width: 28px; height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform .35s ease, opacity .35s ease, width .35s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* ── NAV OVERLAY ── */
+  .nav-overlay {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(480px, 100vw);
+    background: rgba(200,215,240,.15);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 1050;
+    padding: 100px 60px 60px;
+    transform: translateX(100%);
+    transition: transform .5s cubic-bezier(.76,0,.24,1);
+    border-left: 1px solid rgba(255,255,255,.1);
+    overflow-y: auto;
+  }
+  .nav-overlay.open { transform: translateX(0); }
+
+  .nav-overlay nav a {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+    color: var(--white);
+    text-decoration: none;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    transition: color .25s, padding-left .25s;
+    position: relative;
+  }
+  .nav-overlay nav a:hover { color: var(--gold); padding-left: 12px; }
+  .nav-overlay nav a.active {
+    color: var(--gold); font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-overlay nav a.active::before {
+    content: '▷'; font-size: .8rem; color: var(--gold);
+  }
+  .nav-section-label {
+    font-size: .75rem; letter-spacing: .15em;
+    color: rgba(255,255,255,.45); text-transform: uppercase;
+    margin: 28px 0 8px;
+  }
+  .nav-close-btn {
+    position: absolute; top: 24px; right: 24px;
+    width: 44px; height: 44px;
+    border: none; background: rgba(255,255,255,.12);
+    border-radius: 50%;
+    color: white; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: none;
+    transition: background .25s, transform .25s, color .25s;
+    line-height: 1;
+    backdrop-filter: blur(8px);
+  }
+  .nav-close-btn:hover {
+    background: var(--gold); color: var(--blue-deep);
+    transform: rotate(90deg) scale(1.1);
+  }
+
+  .nav-copyright {
+    margin-top: 40px;
+    font-size: .7rem; color: rgba(255,255,255,.35); line-height: 1.7;
+  }
+
+  /* ── SECTION BASE ── */
+  section { position: relative; overflow: hidden; }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh; min-height: 600px;
+    display: flex; align-items: center;
+    background: var(--blue-deep);
+  }
+  .hero-video-wrap {
+    position: absolute; inset: 0;
+    overflow: hidden;
+  }
+  .hero-video-wrap video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: blur(2px) brightness(.55);
+    transform: scale(1.05);
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg,
+      rgba(10,26,92,.85) 0%,
+      rgba(21,101,232,.35) 60%,
+      rgba(10,26,92,.65) 100%);
+  }
+  /* Gold blobs */
+  .hero-blob {
+    position: absolute; border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+    background: linear-gradient(135deg, rgba(245,166,35,.25), transparent);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .hero-blob-1 { width: 420px; height: 340px; bottom: 80px; right: 60px; }
+  .hero-blob-2 { width: 280px; height: 200px; bottom: 20px; left: 40px; opacity: .5; }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    width: 100%; max-width: 1200px; margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .hero-left .hero-eyebrow {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(.75rem, 1.2vw, .9rem);
+    letter-spacing: .22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .hero-left .hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    margin: 10px 0 4px;
+    opacity: 0; transform: translateY(30px);
+  }
+  .hero-left .hero-title strong {
+    font-weight: 800;
+    display: block;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    background: linear-gradient(90deg, #fff 40%, var(--blue-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-left .hero-sub {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(.95rem, 1.5vw, 1.1rem);
+    color: var(--blue-light);
+    margin-top: 12px;
+    line-height: 1.5;
+    opacity: 0; transform: translateY(20px);
+  }
+  .hero-left .hero-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 32px;
+    padding: 14px 36px;
+    border: 1.5px solid rgba(255,255,255,.5);
+    border-radius: 4px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--white);
+    text-decoration: none;
+    background: rgba(255,255,255,.05);
+    backdrop-filter: blur(8px);
+    position: relative; overflow: hidden;
+    cursor: none;
+    opacity: 0; transform: translateY(20px);
+    transition: color .3s;
+  }
+  .hero-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(245,166,35,.18), transparent);
+    transform: translateX(-100%);
+    transition: transform .55s ease;
+  }
+  .hero-btn:hover::before { transform: translateX(100%); }
+  .hero-btn:hover {
+    border-color: var(--gold); color: var(--gold-light);
+    box-shadow: 0 0 24px rgba(245,166,35,.25);
+  }
+
+  .hero-right {
+    display: flex; flex-direction: column; gap: 24px;
+    opacity: 0; transform: translateX(40px);
+  }
+  .hero-info-card {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+    padding: 24px 28px;
+    backdrop-filter: blur(12px);
+    transition: background .3s, border-color .3s;
+  }
+  .hero-info-card:hover {
+    background: rgba(255,255,255,.11);
+    border-color: rgba(245,166,35,.3);
+  }
+  .hero-card-icon { width: 48px; height: 48px; margin-bottom: 14px; }
+  .hero-card-title {
+    font-weight: 800; font-size: 1rem;
+    font-style: italic; color: var(--white);
+    margin-bottom: 6px;
+  }
+  .hero-card-body { font-size: .88rem; color: var(--text-body); line-height: 1.6; }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    opacity: 0; z-index: 3;
+  }
+  .scroll-mouse {
+    width: 24px; height: 38px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-radius: 12px;
+    position: relative;
+  }
+  .scroll-mouse::before {
+    content: '';
+    width: 3px; height: 8px;
+    background: var(--gold);
+    border-radius: 2px;
+    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+    animation: scrollAnim 1.6s ease-in-out infinite;
+  }
+  .scroll-chevrons { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .scroll-chevrons span {
+    display: block; width: 8px; height: 8px;
+    border-right: 1.5px solid rgba(255,255,255,.4);
+    border-bottom: 1.5px solid rgba(255,255,255,.4);
+    transform: rotate(45deg);
+    animation: chevronFade 1.6s ease-in-out infinite;
+  }
+  .scroll-chevrons span:nth-child(2) { animation-delay: .2s; opacity: .6; }
+  .scroll-chevrons span:nth-child(3) { animation-delay: .4s; opacity: .3; }
+  @keyframes scrollAnim {
+    0%,100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+    60% { transform: translateX(-50%) translateY(12px); opacity: 0; }
+  }
+  @keyframes chevronFade {
+    0%,100% { opacity: .4; } 50% { opacity: 1; }
+  }
+
+  /* ── SECTION APPEAR TRANSITION ── */
+  .appear-section { opacity: 0; transform: translateY(50px); }
+
+  /* ── SECTION TITLE SHARED ── */
+  .section-title {
+    text-align: center;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    margin-bottom: 48px;
+    color: var(--blue-deep);
+  }
+  .section-title.light { color: var(--white); }
+
+  /* ── CARRUSEL DE SERVICIOS ── */
+  #servicios {
+    background: linear-gradient(180deg, #f0f4ff 0%, #dce8ff 100%);
+    padding: 80px 0 100px;
+  }
+  #servicios .section-title { color: var(--blue-deep); }
+
+  .services-swiper { padding: 0 40px 50px !important; }
+  .services-swiper .swiper-slide {
+    width: 280px;
+    transition: transform .4s ease;
+  }
+  .service-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(21,101,232,.12);
+    transition: transform .4s ease, box-shadow .4s ease;
+    cursor: none;
+  }
+  .service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(21,101,232,.22);
+  }
+  .service-card-img {
+    height: 160px;
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-bright));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+    position: relative; overflow: hidden;
+  }
+  .service-card-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,.2));
+  }
+  .service-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--gold);
+    color: #1a0000; font-weight: 800;
+    font-size: .7rem; letter-spacing: .08em;
+    padding: 4px 10px; border-radius: 20px; z-index: 1;
+    text-transform: uppercase;
+  }
+  .service-card-body { padding: 20px; }
+  .service-meta {
+    font-size: .72rem; color: #6b7280;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .service-card-title {
+    font-weight: 800; color: var(--blue-deep);
+    font-size: 1rem; line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .service-card-desc { font-size: .82rem; color: #4b5563; line-height: 1.6; }
+
+  .swiper-scrollbar {
+    background: rgba(21,101,232,.1) !important;
+    height: 3px !important;
+    border-radius: 3px !important;
+    bottom: 16px !important;
+    left: 40px !important;
+    width: calc(100% - 80px) !important;
+  }
+  .swiper-scrollbar-drag {
+    background: var(--gold) !important;
+    border-radius: 3px !important;
+  }
+
+  /* ── QUIENES SOMOS ── */
+  #quienes {
+    background: linear-gradient(160deg, #f7f9ff 0%, #eaf0ff 100%);
+    padding: 80px 0 100px;
+    position: relative;
+  }
+  #quienes::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--blue-mid), var(--gold), var(--blue-mid));
+  }
+
+  .quienes-header {
+    text-align: center; margin-bottom: 48px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--blue-deep);
+    font-weight: 400;
+  }
+
+  .quienes-swiper {
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 60px !important;
+  }
+  .quienes-slide {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: center;
+    border-radius: 24px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 8px 40px rgba(21,101,232,.1);
+  }
+  .quienes-img-wrap {
+    height: 400px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #1a3a9e, #0a1a5c);
+  }
+  .quienes-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: .75; mix-blend-mode: luminosity;
+  }
+  .quienes-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(10,26,92,.6) 0%, rgba(21,101,232,.25) 100%);
+  }
+  .quienes-text { padding: 40px 40px 40px 0; }
+  .quienes-text-title {
+    font-weight: 800; font-size: clamp(1.2rem, 2vw, 1.6rem);
+    color: var(--blue-deep); margin-bottom: 16px; line-height: 1.25;
+  }
+  .quienes-text-title em {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic; font-weight: 400;
+    color: var(--blue-bright);
+  }
+  .quienes-text p {
+    font-size: .92rem; color: #374151; line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .quienes-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    border: 1.5px solid var(--blue-mid);
+    border-radius: 6px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--blue-mid);
+    text-decoration: none;
+    transition: all .3s ease;
+    position: relative; overflow: hidden;
+    cursor: none;
+  }
+  .quienes-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--blue-mid); transform: scaleX(0); transform-origin: left;
+    transition: transform .35s ease; z-index: -1;
+  }
+  .quienes-btn:hover { color: white; border-color: var(--blue-mid); }
+  .quienes-btn:hover::before { transform: scaleX(1); }
+
+  .quienes-nav {
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    margin-top: 32px;
+  }
+  .quienes-nav-btn {
+    width: 44px; height: 44px;
+    border: 1.5px solid var(--blue-mid); border-radius: 50%;
+    background: transparent; color: var(--blue-mid);
+    font-size: 1.2rem; cursor: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .3s ease;
+  }
+  .quienes-nav-btn:hover { background: var(--blue-mid); color: white; }
+
+  /* ── SESIONES ── */
+  #sesiones {
+    background: linear-gradient(160deg, #06174a 0%, #0d2878 50%, #06174a 100%);
+    padding: 80px 0 100px;
+    position: relative; overflow: hidden;
+  }
+  #sesiones::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,166,35,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .sesiones-header {
+    text-align: center; max-width: 900px; margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .sesiones-sub {
+    font-size: clamp(.9rem, 1.5vw, 1.05rem);
+    color: var(--text-body); line-height: 1.7;
+  }
+
+  .sesiones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 40px;
+  }
+  .session-card {
+    position: relative; border-radius: 16px; overflow: hidden;
+    aspect-ratio: 3/4; cursor: none;
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+  }
+  .session-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  .session-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .6s ease;
+    filter: brightness(.85);
+  }
+  .session-card:hover img { transform: scale(1.06); filter: brightness(.7); }
+
+  .session-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--gold); color: #1a0000;
+    font-weight: 800; font-size: .7rem; letter-spacing: .06em;
+    padding: 4px 10px; border-radius: 20px;
+    text-transform: uppercase; z-index: 2;
+  }
+
+  .session-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,10,50,.92) 100%);
+    z-index: 1;
+  }
+  .session-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 20px; z-index: 2;
+  }
+  .session-meta {
+    font-size: .72rem; color: rgba(255,255,255,.6);
+    font-family: 'Roboto Condensed', sans-serif; font-style: italic;
+    margin-bottom: 4px;
+  }
+  .session-title {
+    font-weight: 800; font-size: .95rem; color: white;
+    line-height: 1.3;
+  }
+  .session-logo {
+    position: absolute; bottom: 16px; right: 16px;
+    width: 32px; height: 32px; z-index: 3; opacity: .7;
+  }
+
+  /* Popup overlay */
+  .session-popup {
+    position: absolute; inset: 0; z-index: 10;
+    background: rgba(10,26,92,.92);
+    backdrop-filter: blur(8px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    opacity: 0; transform: scale(.96);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: none;
+  }
+  .session-card:hover .session-popup {
+    opacity: 1; transform: scale(1);
+    pointer-events: auto;
+  }
+  .popup-play {
+    width: 56px; height: 56px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+    color: var(--gold);
+    transition: background .3s, transform .3s;
+  }
+  .session-card:hover .popup-play { background: rgba(245,166,35,.15); transform: scale(1.1); }
+  .popup-title {
+    font-weight: 800; font-size: .95rem; margin-bottom: 8px;
+    color: white; line-height: 1.3;
+  }
+  .popup-meta { font-size: .75rem; color: var(--blue-light); font-style: italic; }
+
+  /* ── CTA ── */
+  #cta {
+    padding: 120px 40px;
+    text-align: center;
+    background: linear-gradient(135deg, #c89000 0%, #e8a800 40%, #c07000 100%);
+    position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
+    opacity: .5;
+  }
+  .cta-title {
+    font-weight: 800; font-size: clamp(1.8rem, 4vw, 3rem);
+    color: white; margin-bottom: 32px; position: relative; z-index: 1;
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 16px 48px;
+    border: 2px solid white;
+    border-radius: 6px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic; font-size: 1.15rem;
+    color: white; text-decoration: none;
+    position: relative; z-index: 1; overflow: hidden;
+    transition: color .35s;
+    cursor: none;
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(6px);
+  }
+  .cta-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: white; transform: scaleX(0); transform-origin: left;
+    transition: transform .4s ease; z-index: -1;
+  }
+  .cta-btn:hover { color: #a06000; }
+  .cta-btn:hover::before { transform: scaleX(1); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: linear-gradient(160deg, #0e2060 0%, #0a1a5c 100%);
+    padding: 60px 40px 30px;
+    position: relative;
+  }
+  footer::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .footer-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 48px; align-items: start;
+    margin-bottom: 48px;
+  }
+  .footer-brand .footer-logo { width: 200px; margin-bottom: 12px; }
+  .footer-tagline {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic; color: var(--blue-light);
+    font-size: .95rem; margin-bottom: 16px;
+  }
+  .footer-address { font-size: .82rem; color: var(--text-body); line-height: 1.8; }
+
+  .footer-social {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .footer-social-label {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    font-size: 1rem; color: var(--text-body); width: 100%;
+    margin-bottom: 8px;
+  }
+  .footer-social-label strong { color: var(--white); font-weight: 800; }
+  .social-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 1.1rem;
+    text-decoration: none;
+    transition: all .3s; cursor: none;
+  }
+  .social-icon:hover {
+    background: var(--gold); color: var(--blue-deep);
+    border-color: var(--gold);
+    transform: translateY(-3px);
+  }
+
+  .footer-links h4 {
+    font-weight: 800; font-size: .8rem;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .footer-links a {
+    display: block; font-size: .9rem;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-style: italic;
+    color: var(--text-body); text-decoration: none;
+    padding: 6px 0;
+    transition: color .25s, padding-left .25s;
+  }
+  .footer-links a:hover { color: var(--white); padding-left: 8px; }
+
+  .footer-bottom {
+    max-width: 1100px; margin: 0 auto;
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 24px;
+    font-size: .78rem; color: rgba(255,255,255,.35);
+  }
+
+  /* ── PARTICLES CANVAS ── */
+  #particles-canvas {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 1;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .quienes-slide { grid-template-columns: 1fr; }
+    .quienes-img-wrap { height: 250px; }
+    .quienes-text { padding: 30px; }
+    .sesiones-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    header { padding: 16px 20px; }
+    .sesiones-grid { padding: 0 20px; }
+  }
+  @media (max-width: 600px) {
+    .sesiones-grid { grid-template-columns: 1fr; }
+    .hero-content { padding: 0 20px; }
+    #cta { padding: 80px 24px; }
+    .nav-overlay { padding: 80px 30px 40px; }
+  }
+
+  /* ── LOADING SCREEN ── */
+  #loading {
+    position: fixed; inset: 0; z-index: 9000;
+    background: var(--blue-deep);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+  }
+  .loading-logo { opacity: 0; animation: fadeInUp .8s .2s forwards; }
+  .loading-bar-wrap {
+    width: 200px; height: 2px;
+    background: rgba(255,255,255,.1); border-radius: 2px;
+    overflow: hidden;
+  }
+  .loading-bar {
+    height: 100%; background: var(--gold);
+    animation: loadBar 1.4s ease forwards;
+  }
+  @keyframes loadBar { from { width: 0; } to { width: 100%; } }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading">
+  <div class="loading-logo">
+    <svg width="120" height="60" viewBox="0 0 120 60" fill="none">
+      <circle cx="30" cy="30" r="28" stroke="white" stroke-width="1.5" opacity=".4"/>
+      <polygon points="24,18 24,42 44,30" fill="#f5a623"/>
+      <text x="54" y="38" fill="white" font-family="Outfit" font-size="22" font-weight="800">EDUCA</text>
+    </svg>
+  </div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header id="main-header">
+  <div class="logo-wrap">
+    <div class="logo-icon">
+      <svg viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" opacity=".5"/>
+        <polygon points="19,14 19,34 35,24" fill="#f5a623"/>
+        <line x1="6" y1="24" x2="12" y2="24" stroke="white" stroke-width="1.5"/>
+        <line x1="36" y1="24" x2="42" y2="24" stroke="white" stroke-width="1.5"/>
+      </svg>
+    </div>
+  </div>
+  <button class="hamburger" id="menu-btn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ══════════════════ NAV OVERLAY ══════════════════ -->
+<div class="nav-overlay" id="nav-overlay">
+  <button class="nav-close-btn" id="nav-close-btn" aria-label="Cerrar menú">&#10005;</button>
+  <nav>
+    <a href="#hero">Inicio</a>
+    <a href="#servicios" class="active">&#9655; <span>Capítulos</span></a>
+    <a href="#sesiones">Sesiones</a>
+    <a href="#quienes">Expositores</a>
+    <a href="#cta">Participación</a>
+    <a href="#footer">Contacto</a>
+    <div class="nav-section-label">Institucional</div>
+    <a href="#">Convenios</a>
+    <a href="#">Trabaja con nosotros</a>
+  </nav>
+  <div class="nav-copyright">
+    © 2026 - IDERMA CAPILAR EDUCA. Derechos reservados del Autor.<br>
+    Todos los contenidos publicados en este sitio web (incluyendo textos, imágenes, gráficos, logotipos, código fuente) son propiedad intelectual de Iderma Capilar Educa o de sus creadores originales. Queda estrictamente prohibida la reproducción, distribución, modificación o transmisión total o parcial de este contenido sin la autorización previa y por escrito del titular.
+  </div>
+</div>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section id="hero">
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Video placeholder (uses a gradient animation as fallback) -->
+  <div class="hero-video-wrap" id="hero-video-wrap">
+    <div id="hero-video-placeholder" style="
+      position:absolute;inset:0;
+      background: linear-gradient(135deg,#0a1a5c 0%,#1a3a9e 30%,#1565e8 60%,#0a1a5c 100%);
+      background-size:300% 300%;
+      animation: gradMove 8s ease infinite;
+    "></div>
+    <!-- Silhouette image layer -->
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;overflow:hidden;opacity:.35;">
+      <div style="width:50%;height:100%;background:url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800') center/cover no-repeat;filter:grayscale(40%) brightness(.6);"></div>
+    </div>
+  </div>
+  <style>
+    @keyframes gradMove {
+      0%,100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+  </style>
+  <div class="hero-overlay"></div>
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-left">
+      <p class="hero-eyebrow" id="he1">Iderma Capilar</p>
+      <h1 class="hero-title" id="he2">
+        Compartimos<br>
+        <strong>CONOCIMIENTO</strong>
+      </h1>
+      <p class="hero-sub" id="he3">Inspirando a nuestra comunidad a cuidarse, prevenir y vivir con propósito.</p>
+      <a href="#servicios" class="hero-btn" id="he4">Ver Capítulos</a>
+    </div>
+    <div class="hero-right" id="hero-right">
+      <div class="hero-info-card">
+        <div class="hero-card-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="22" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <circle cx="18" cy="20" r="6" stroke="rgba(79,195,247,.8)" stroke-width="1.5"/>
+            <circle cx="30" cy="20" r="6" stroke="rgba(79,195,247,.8)" stroke-width="1.5"/>
+            <circle cx="24" cy="32" r="6" stroke="rgba(79,195,247,.8)" stroke-width="1.5"/>
+            <line x1="22" y1="24" x2="26" y2="28" stroke="rgba(79,195,247,.5)" stroke-width="1"/>
+            <line x1="26" y1="24" x2="22" y2="28" stroke="rgba(79,195,247,.5)" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="hero-card-title">Expositores Nacionales e Internacionales</div>
+        <div class="hero-card-body">comparten conocimiento médico para una vida más larga, saludable y con propósito.</div>
+      </div>
+      <div class="hero-info-card">
+        <div class="hero-card-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <rect x="8" y="14" width="32" height="26" rx="5" stroke="rgba(79,195,247,.8)" stroke-width="1.5"/>
+            <line x1="15" y1="22" x2="33" y2="22" stroke="rgba(79,195,247,.5)" stroke-width="1.5"/>
+            <line x1="15" y1="28" x2="28" y2="28" stroke="rgba(79,195,247,.5)" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="hero-card-title">En Iderma Capilar Educa valoramos profundamente</div>
+        <div class="hero-card-body">tu generosidad al compartir conocimiento y experiencia. Tu aporte ayuda a acercar la ciencia a la vida diaria.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator" id="scroll-indicator">
+    <div class="scroll-mouse"></div>
+    <div class="scroll-chevrons">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CARRUSEL DE SERVICIOS ══════════════════ -->
+<section id="servicios" class="appear-section">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <h2 class="quienes-header" style="color:var(--blue-deep);margin-bottom:48px;">
+      <em style="color:var(--blue-bright);">Salud, Ciencia y Conciencia</em>
+    </h2>
+  </div>
+  <div class="swiper services-swiper" id="services-swiper">
+    <div class="swiper-wrapper" id="services-wrapper">
+      <!-- Cards generated by JS -->
+    </div>
+    <div class="swiper-scrollbar"></div>
+  </div>
+</section>
+
+<!-- ══════════════════ QUIENES SOMOS ══════════════════ -->
+<section id="quienes" class="appear-section">
+  <h2 class="quienes-header">
+    <em>Salud, Ciencia y Conciencia</em>
+  </h2>
+  <div class="swiper quienes-swiper" id="quienes-swiper">
+    <div class="swiper-wrapper" id="quienes-wrapper">
+      <!-- Slides generated by JS -->
+    </div>
+  </div>
+  <div class="quienes-nav">
+    <button class="quienes-nav-btn" id="quienes-prev">&#8592;</button>
+    <button class="quienes-nav-btn" id="quienes-next">&#8594;</button>
+  </div>
+</section>
+
+<!-- ══════════════════ SESIONES ══════════════════ -->
+<section id="sesiones" class="appear-section">
+  <div class="sesiones-header">
+    <p class="sesiones-sub">Especialistas comparten conocimientos, experiencias y avances médicos para inspirar hábitos saludables, prevención y bienestar integral en nuestra comunidad.</p>
+  </div>
+  <div class="sesiones-grid" id="sesiones-grid">
+    <!-- Cards generated by JS -->
+  </div>
+</section>
+
+<!-- ══════════════════ CTA ══════════════════ -->
+<section id="cta" class="appear-section">
+  <h2 class="cta-title">¿Quieres formar parte de esta iniciativa?</h2>
+  <a href="#footer" class="cta-btn">Más información</a>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+        <div style="width:50px;height:50px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+            <polygon points="14,10 14,38 36,24" fill="#f5a623"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:.6rem;letter-spacing:.2em;color:rgba(255,255,255,.45);text-transform:uppercase;">Iderma Capilar</div>
+          <div style="font-weight:800;font-size:1.4rem;letter-spacing:.08em;color:white;">EDUCA</div>
+        </div>
+      </div>
+      <div class="footer-tagline">Salud, Ciencia y Conciencia</div>
+      <div class="footer-address">
+        Edificio Empresarial José Pardo, Piso 19, Oficina 1903<br>
+        Calle Mártir José Olaya 129, Miraflores. Lima, Perú.
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-social">
+        <div class="footer-social-label">Síguenos en nuestras <strong>redes sociales</strong></div>
+        <a href="#" class="social-icon" title="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="social-icon" title="TikTok">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.53a8.16 8.16 0 0 0 4.77 1.52V6.6a4.85 4.85 0 0 1-1-.09z"/></svg>
+        </a>
+        <a href="#" class="social-icon" title="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+      <div class="footer-links">
+        <a href="#">Capítulos</a>
+        <a href="#sesiones">Sesiones</a>
+        <a href="#quienes">Expositores</a>
+        <a href="#cta">Participación</a>
+        <a href="#">Contacto</a>
+      </div>
+      <div class="footer-links">
+        <h4>Institucional</h4>
+        <a href="#">Convenios</a>
+        <a href="#">Trabaja con nosotros</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 - IDERMA CAPILAR EDUCA. Derechos reservados del Autor.
+  </div>
+</footer>
+
+<!-- ══════════════════ JAVASCRIPT ══════════════════ -->
+<script>
+// ── LOADING ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loading = document.getElementById('loading');
+    loading.style.transition = 'opacity .6s ease';
+    loading.style.opacity = '0';
+    setTimeout(() => { loading.style.display = 'none'; initAnimations(); }, 600);
+  }, 1600);
+});
+
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+const animCursor = () => {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * .1; ry += (my - ry) * .1;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+};
+animCursor();
+
+// ── HEADER SCROLL ──
+const header = document.getElementById('main-header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── HAMBURGER MENU ──
+const menuBtn = document.getElementById('menu-btn');
+const navOverlay = document.getElementById('nav-overlay');
+menuBtn.addEventListener('click', () => {
+  menuBtn.classList.toggle('open');
+  navOverlay.classList.toggle('open');
+});
+const navCloseBtn = document.getElementById('nav-close-btn');
+navCloseBtn.addEventListener('click', () => {
+  menuBtn.classList.remove('open');
+  navOverlay.classList.remove('open');
+});
+navOverlay.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    menuBtn.classList.remove('open');
+    navOverlay.classList.remove('open');
+  });
+});
+
+// ── PARTICLE CANVAS ──
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.r = Math.random() * 1.5 + .3;
+    this.vx = (Math.random() - .5) * .35;
+    this.vy = -(Math.random() * .4 + .1);
+    this.alpha = Math.random() * .5 + .1;
+    this.life = 0; this.maxLife = 200 + Math.random() * 200;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.maxLife || this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    const fade = this.life < 30 ? this.life / 30 : this.life > this.maxLife - 30 ? (this.maxLife - this.life) / 30 : 1;
+    ctx.fillStyle = `rgba(245,166,35,${this.alpha * fade})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+const animParticles = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animParticles);
+};
+animParticles();
+
+// ── BUILD SERVICE CARDS ──
+const services = [
+  { badge: 'NUEVO', icon: '🧬', date: 'C3 S11 | 10/05/2026', title: 'Glucosa, Presión y Colesterol', desc: 'Especialistas comparten cómo controlar los indicadores metabólicos más importantes para tu salud diaria.' },
+  { badge: 'NUEVO', icon: '🫀', date: 'C3 S10 | 03/05/2026', title: 'Salud Cardiovascular Integral', desc: 'Avances en cardiología preventiva y hábitos que protegen el corazón a largo plazo.' },
+  { badge: '', icon: '🧠', date: 'C3 S09 | 26/04/2026', title: 'Neurología y Bienestar Mental', desc: 'Cómo el cerebro influye en tu salud general y qué hacer para mantenerlo en óptimas condiciones.' },
+  { badge: '', icon: '🩺', date: 'C3 S08 | 19/04/2026', title: 'Diagnóstico Temprano del Cáncer', desc: 'Estrategias de detección y prevención respaldadas por los últimos avances oncológicos.' },
+  { badge: '', icon: '💊', date: 'C3 S07 | 12/04/2026', title: 'Farmacología Cotidiana', desc: 'Lo que debes saber sobre medicamentos, interacciones y automedicación responsable.' },
+  { badge: '', icon: '🥗', date: 'C3 S06 | 05/04/2026', title: 'Nutrición y Longevidad', desc: 'Alimentación basada en evidencia para vivir más y mejor, con propósito y energía.' },
+];
+
+const wrapper = document.getElementById('services-wrapper');
+services.forEach(s => {
+  wrapper.innerHTML += `
+    <div class="swiper-slide">
+      <div class="service-card">
+        <div class="service-card-img">
+          ${s.badge ? `<div class="service-badge">${s.badge}</div>` : ''}
+          <span style="position:relative;z-index:1;font-size:2.5rem;">${s.icon}</span>
+        </div>
+        <div class="service-card-body">
+          <div class="service-meta">${s.date}</div>
+          <div class="service-card-title">${s.title}</div>
+          <div class="service-card-desc">${s.desc}</div>
+        </div>
+      </div>
+    </div>`;
+});
+
+// ── BUILD QUIENES SOMOS SLIDES ──
+const quienesData = [
+  {
+    title: 'En Iderma Capilar Educa <em>valoramos profundamente</em> tu generosidad al compartir conocimiento y experiencia.',
+    body: 'Tu contribución permite que el conocimiento científico se integre cada vez más en la vida cotidiana, motivando a nuestra comunidad a priorizar el cuidado personal, la prevención y el bienestar consciente. Cada acción suma en esta misión que busca generar un impacto positivo y duradero en la vida de las personas. Gracias por formar parte de este propósito que impulsa una cultura de salud, inspiración y transformación continua para quienes confían en nosotros cada día.',
+    bg: 'linear-gradient(135deg,#0a1a5c,#1565e8)',
+    emoji: '🎥'
+  },
+  {
+    title: 'Nuestra misión es <em>acercar la ciencia</em> a la vida diaria de las personas.',
+    body: 'Inspiramos a nuestra comunidad a cuidarse, prevenir y vivir con propósito. Trabajamos junto a expositores nacionales e internacionales para llevar el conocimiento médico más actualizado directamente a quienes más lo necesitan, con claridad, pasión y compromiso.',
+    bg: 'linear-gradient(135deg,#1a0a6c,#4a1565)',
+    emoji: '🌟'
+  },
+  {
+    title: 'Creemos en el poder <em>transformador</em> del conocimiento compartido.',
+    body: 'Cada sesión, cada capítulo, cada expositor suma a una comunidad que crece, aprende y se cuida. Iderma Capilar Educa es el espacio donde la ciencia y la conciencia se encuentran para construir una vida más plena.',
+    bg: 'linear-gradient(135deg,#0a3a1c,#156528)',
+    emoji: '💡'
+  }
+];
+
+const quienesWrapper = document.getElementById('quienes-wrapper');
+quienesData.forEach(q => {
+  quienesWrapper.innerHTML += `
+    <div class="swiper-slide">
+      <div class="quienes-slide">
+        <div class="quienes-img-wrap" style="background:${q.bg};">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:6rem;">${q.emoji}</div>
+          <div class="quienes-img-overlay"></div>
+        </div>
+        <div class="quienes-text">
+          <div class="quienes-text-title">${q.title}</div>
+          <p>${q.body}</p>
+          <a href="#" class="quienes-btn">Ver más</a>
+        </div>
+      </div>
+    </div>`;
+});
+
+// ── BUILD SESSION CARDS ──
+const sessions = [
+  { badge: 'NUEVO', date: 'C3 S11 | 10/05/2026', title: 'Glucosa, Presión y Colesterol', color: '#1a3a9e', emoji: '👨‍⚕️' },
+  { badge: 'NUEVO', date: 'C3 S11 | 10/05/2026', title: 'Glucosa, Presión y Colesterol', color: '#1a5c3a', emoji: '👩‍⚕️' },
+  { badge: 'NUEVO', date: 'C3 S11 | 10/05/2026', title: 'Glucosa, Presión y Colesterol', color: '#5c1a3a', emoji: '🧑‍⚕️' },
+];
+
+const sesGrid = document.getElementById('sesiones-grid');
+sessions.forEach(s => {
+  sesGrid.innerHTML += `
+    <div class="session-card">
+      <div style="width:100%;height:100%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:5rem;">${s.emoji}</div>
+      ${s.badge ? `<div class="session-badge">${s.badge}</div>` : ''}
+      <div class="session-overlay"></div>
+      <div class="session-info">
+        <div class="session-meta">${s.date}</div>
+        <div class="session-title">${s.title}</div>
+      </div>
+      <div class="session-popup">
+        <div class="popup-play">▶</div>
+        <div class="popup-title">${s.title}</div>
+        <div class="popup-meta">${s.date}</div>
+      </div>
+    </div>`;
+});
+
+// ── INIT ANIMATIONS ──
+function initAnimations() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero entrance
+  const tl = gsap.timeline({ delay: .2 });
+  tl.to('#he1', { opacity: 1, y: 0, duration: .7, ease: 'power3.out' })
+    .to('#he2', { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, '-=.4')
+    .to('#he3', { opacity: 1, y: 0, duration: .6, ease: 'power3.out' }, '-=.3')
+    .to('#he4', { opacity: 1, y: 0, duration: .6, ease: 'power3.out' }, '-=.3')
+    .to('#hero-right', { opacity: 1, x: 0, duration: .9, ease: 'power3.out' }, '-=.6')
+    .to('#scroll-indicator', { opacity: 1, duration: .6 }, '-=.2');
+
+  // Appear sections
+  gsap.utils.toArray('.appear-section').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .85, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 80%', once: true }
+    });
+  });
+
+  // Services swiper (wheel scroll)
+  const servSwiper = new Swiper('#services-swiper', {
+    slidesPerView: 'auto',
+    spaceBetween: 24,
+    freeMode: true,
+    scrollbar: { el: '.swiper-scrollbar', draggable: true },
+    mousewheel: { forceToAxis: true },
+    breakpoints: {
+      640: { slidesPerView: 2 },
+      1024: { slidesPerView: 3.5 }
+    }
+  });
+
+  // Quienes somos swiper
+  const quienesSwiper = new Swiper('#quienes-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 40,
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
+    mousewheel: { forceToAxis: true, releaseOnEdges: true },
+    navigation: {
+      nextEl: '#quienes-next',
+      prevEl: '#quienes-prev',
+    }
+  });
+}
+</script>
+</body>
+</html>
