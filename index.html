@@ -117,7 +117,7 @@
 
   .logo-wrap { display: flex; align-items: center; gap: 12px; }
   .logo-icon {
-    width: 56px; height: 56px;
+    width: 50px; height: 50px;
     border-radius: 50%;
     border: 2px solid rgba(255,255,255,.25);
     display: flex; align-items: center; justify-content: center;
@@ -387,7 +387,7 @@
     .hero-tri-top   { width: 200px; height: 200px; }
     .hero-tri-bot   { width: 180px; height: 180px; }
 	.srv-glow-line { display: none;}
-	.logo-wrap {height: 36px; width: auto; display: block;}
+	.logo-wrap {height: 30px; width: auto; display: block;}
   }
 
   /* ── BOTÓN HERO ── */
@@ -1060,7 +1060,29 @@
   grid-template-columns:repeat(3, 1fr);
   gap:28px;
 }
-@media (max-width: 900px){ .sesiones-grid{ grid-template-columns:1fr; } }
+@media (max-width: 900px) {
+  .sesiones-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding-bottom: 16px;
+    /* Muestra borde de la siguiente tarjeta */
+    padding-right: 40px;
+    scrollbar-width: none;
+  }
+  .sesiones-grid::-webkit-scrollbar { display: none; }
+
+  .sesion-card {
+    flex: 0 0 78vw;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+  .sesiones-title{ margin:40px auto 48px;}
+  .sesion-img { height: 380px; }
+}
 
 .sesion-card{
   position:relative;
@@ -1108,6 +1130,7 @@
 }
 .sesion-caption-text{ display:flex; flex-direction:column; gap:4px; }
 .sesion-meta{ font-size:13px; opacity:.9; }
+.sesion-meta-text{ font-size:14px; opacity:.9; padding: 20px 0;}
 .sesion-title-card{ font-size:16px; font-weight:500; }
 .sesion-icon{
   width:28px; height:28px;
@@ -1171,6 +1194,18 @@ footer::before {
   font-weight: 800; font-size: clamp(1.6rem, 3.4vw, 2.6rem);
   color: white; margin: 0 0 24px; position: relative; z-index: 1;
 }
+.cta-para {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: clamp(.9rem, 1.3vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.75;
+  max-width: 560px;
+  margin: -12px auto 32px;
+  position: relative; z-index: 1;
+  text-align: center;
+}
+
 .cta-btn {
   display: inline-block;
   padding: 14px 44px;
@@ -1214,7 +1249,7 @@ footer::before {
 }
 .footer-brand { width: 100%; }
 .footer-brand .footer-logo {
-  width: 95%;
+  width: 60%;
   max-width: 360px;
   height: auto;
   display: block;
@@ -1364,9 +1399,9 @@ footer::before {
   <button class="nav-close-btn" id="nav-close-btn" aria-label="Cerrar menú">&#10005;</button>
   <nav>
     <a href="#hero">Inicio</a>
-    <a href="#servicios" class="active">&#9655; <span>Capítulos</span></a>
-    <a href="#sesiones">Sesiones</a>
-    <a href="#quienes">Expositores</a>
+    <a href="#servicios">Propuestas de valor</a>
+    <a href="#quienes">Quiénes somos</a>
+    <a href="#sesiones">Expositores</a>
     <a href="#cta">Participación</a>
     <a href="#footer">Contacto</a>
     <div class="nav-section-label">Institucional</div>
@@ -1660,7 +1695,7 @@ footer::before {
   <div class="sesiones-overlay"></div>
 
   <div class="sesiones-inner">
-    <h2 class="sesiones-title">Especialistas comparten conocimientos, experiencias y avances médicos para inspirar hábitos saludables, prevención y bienestar integral en nuestra comunidad.</h2>
+    <h2 class="sesiones-title">Especialistas comparten conocimientos, experiencias y avances médicos.</h2>
 
     <div class="sesiones-grid">
       <!-- Tarjeta 1 -->
@@ -1671,11 +1706,12 @@ footer::before {
           <div class="sesion-caption-text">
             <span class="sesion-meta">C3 S11 | 10/05/2026</span>
             <span class="sesion-title-card">Glucosa, Presión y Colesterol</span>
+			<span class="sesion-meta-text">El Dr. Anibal Córdova abordará la importancia del control de la glucosa, la presión arterial y el colesterol para prevenir enfermedades cardiovasculares y mejorar la calidad de vida. Una charla orientada al bienestar integral, la prevención y el cuidado responsable de la salud en cada etapa. </span>
           </div>
-          <svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <polygon points="10,8 16,12 10,16" fill="currentColor"/>
-          </svg>
+          </svg>	
         </div>
       </a>
 
@@ -1688,7 +1724,7 @@ footer::before {
             <span class="sesion-meta">C3 S11 | 10/05/2026</span>
             <span class="sesion-title-card">Glucosa, Presión y Colesterol</span>
           </div>
-          <svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <polygon points="10,8 16,12 10,16" fill="currentColor"/>
           </svg>
@@ -1719,8 +1755,8 @@ footer::before {
 <footer id="footer">
   <div id="cta" class="appear-section">
     <h2 class="cta-title">¿Quieres ser parte de esta iniciativa?</h2>
-	<p>Si eres profesional de la salud, institución educativa o simplemente una persona comprometida con vivir mejor — hay un lugar para ti en IDERMA CAPILAR EDUCA.</p>
-    <a href="#footer" class="cta-btn">Más información</a>
+	<p class="cta-para">Si eres profesional de la salud, institución educativa o simplemente una persona comprometida con vivir mejor — hay un lugar para ti en IDERMA CAPILAR EDUCA.</p>
+    <a href="#footer" class="cta-btn">Solicitar información</a>
   </div>
   <div class="footer-inner">
   <div class="footer-grid">
@@ -1733,7 +1769,7 @@ footer::before {
           
         </div>
       </div>
-      <div class="footer-tagline">Salud, Ciencia y Conciencia</div>
+      
       <div class="footer-address">
         Edificio Empresarial José Pardo, Piso 19, Oficina 1903<br>
         Calle Mártir José Olaya 129, Miraflores. Lima, Perú.
@@ -1757,11 +1793,11 @@ footer::before {
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
       <div class="footer-links">
-        <a href="#">Capítulos</a>
-        <a href="#sesiones">Sesiones</a>
-        <a href="#quienes">Expositores</a>
+        <a href="#servicios">Propuestas de valor</a>
+        <a href="#quienes">Quiénes Somos</a>
+        <a href="#sesiones">Expositores</a>
         <a href="#cta">Participación</a>
-        <a href="#">Contacto</a>
+        <a href="#footer">Contacto</a>
       </div>
       <div class="footer-links">
         <h4>Institucional</h4>
