@@ -9,7 +9,6 @@
     <meta content="Plataforma de educación en salud integral con expertos nacionales e internacionales. Aprende a prevenir, cuidarte y vivir con propósito. Ciencia accesible para una vida plena. Lima, Perú." name="description">
 	
 	    <!-- Favicon -->
-    
 	<link rel="icon" href="favicon.png" type="image/png">
 
 <!-- Google Fonts -->
@@ -34,7 +33,7 @@
     --blue-mid: #1a3a9e;
     --blue-bright: #1565e8;
     --blue-light: #4fc3f7;
-    --gold: #f5a623;
+    --gold: #ccb674;
     --gold-light: #ffd166;
     --white: #ffffff;
     --gray-light: #e8eaf0;
@@ -676,7 +675,7 @@
       transparent 0%,
       rgba(180,140,40,.2) 10%,
       rgba(220,185,60,.55) 30%,
-      rgba(255,230,120,.9) 50%,
+      rgba(255,230,120,1) 50%,
       rgba(220,185,60,.55) 70%,
       rgba(180,140,40,.2) 90%,
       transparent 100%);
@@ -713,15 +712,50 @@
     opacity: 1;
     pointer-events: auto;
   }
+  
+/* ── BRILLO AMBIENTAL POR SLIDE ── */
+.srv-slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1);
+}
+.srv-slide.active::before {
+  opacity: 1;
+}
+
+/* Slide 1 — violeta/índigo */
+.srv-slide[data-slide="0"]::before {
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(146,80,220,.70) 0%, transparent 70%);
+  filter: blur(22px);
+}
+
+/* Slide 2 — cian/azul eléctrico */
+.srv-slide[data-slide="1"]::before {
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,180,230,.76) 0%, transparent 70%);
+  filter: blur(22px);
+}
+
+/* Slide 3 — dorao */
+.srv-slide[data-slide="2"]::before {
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(225,195,95,.74) 0%, transparent 70%);
+  filter: blur(22px);
+}
+
+
 
   /* Layout interior del slide */
   .srv-slide-inner {
     width: 100%; height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    align-items: center;
+    align-items: center;    
     padding: 0 6%;
     position: relative;
+	z-index: 1;
   }
 
   /* Columna izquierda */
@@ -769,13 +803,13 @@
 .srv-icon-wrap::before {
   content: '';
   position: absolute;
-  bottom: -18px; left: 50%;
+  bottom: -33px; left: 50%;
   width: 220px; height: 33px;
   transform: translateX(-50%);
   border-radius: 50%;
   background: radial-gradient(ellipse at center,
     rgba(69, 140, 255, 0.55)  0%,
-    rgba(30,  80, 200, 0.22) 45%,
+    rgba(100,  1780, 255, 0.22) 45%,
     transparent               78%);
   filter: blur(5px);
   animation: srvGround 10s linear infinite;
@@ -937,8 +971,9 @@
     .srv-col-left  { align-items: center; padding-right: 0 50px; }
     .srv-col-right { align-items: center; padding-left: 0; text-align: center; }
     .srv-col-right .srv-icon-wrap { margin: 0 auto; }
-	.srv-text-title {font-size:1.2rem;}
+	.srv-text-title {font-size:1.2rem; text-align: center;}
 	.logo-wrap: {height: 36px; width: auto; display: block;}
+	.srv-logo-wrap img {display:none;}
   }
 
   /* ── QUIENES SOMOS ── */
@@ -1269,7 +1304,7 @@ footer {
   padding: 0;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, #0e2060 0%, #0a1a5c 100%);
+  background: linear-gradient(160deg, #0e2060 0%, #0a1a5c 0%);
   position: relative;
   overflow: hidden;
 }
@@ -1357,7 +1392,26 @@ footer::before {
   justify-content: center;
   padding: 32px 48px 20px;
   box-sizing: border-box;
+  background-image: url('footer-background-iced.png'); /* ← cambia por tu archivo */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
 }
+/* ── SOMBRA DEL CTA SOBRE FOOTER-INNER ── */
+.footer-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: radial-gradient(ellipse 70% 90% at 50% 0%,
+    rgba(50, 60, 90, 0.6) 0%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+
 .footer-grid {
   max-width: 1400px;
   width: 100%;
@@ -1366,11 +1420,13 @@ footer::before {
   grid-template-columns: 1.1fr 1fr 1fr;
   gap: 56px;
   align-items: start;
+  position: relative;
+  z-index: 1;
 }
 .footer-brand { width: 100%; }
 .footer-brand .footer-logo {
-  width: 60%;
-  max-width: 360px;
+  width: 80%;
+  max-width: 560px;
   height: auto;
   display: block;
   margin-bottom: 16px;
@@ -1381,7 +1437,7 @@ footer::before {
   font-style: italic; color: var(--blue-light);
   font-size: .95rem; margin-bottom: 16px;
 }
-.footer-address { font-size: .82rem; color: var(--text-body); line-height: 1.7; }
+.footer-address { font-family: 'Roboto Condensed', sans-serif; font-size: 1rem; color: var(--text-body); line-height: 1.7; }
 
 .footer-social { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .footer-social-label {
@@ -1408,13 +1464,13 @@ footer::before {
 .footer-links h4 {
   font-weight: 800; font-size: .8rem;
   letter-spacing: .12em; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 14px;
+  color: var(--blue-deep); margin-bottom: 14px;
 }
 .footer-links a {
-  display: block; font-size: .9rem;
+  display: block; font-size: 1rem;
   font-family: 'Roboto Condensed', sans-serif;
   font-style: italic;
-  color: var(--text-body); text-decoration: none;
+  color: var(--blue-deep); text-decoration: none;
   padding: 5px 0;
   transition: color .25s, padding-left .25s;
 }
@@ -1422,10 +1478,10 @@ footer::before {
 
 .footer-bottom {
   max-width: 1400px; width: 100%; margin: 0 auto;
-  border-top: 1px solid rgba(255,255,255,.08);
+  border-top: 1px solid rgba(255,255,255,.3);
   padding-top: 16px;
-  font-size: .78rem; color: rgba(255,255,255,.35);
-  text-align: center;
+  font-size: .78rem; color: rgba(255,255,255,.9);
+  text-align: left;
 }
 
 
@@ -1448,9 +1504,13 @@ footer::before {
     .sesiones-grid { padding: 0 20px; }
 	  footer { height: auto; min-height: 0; }
   #cta { flex: 0 0 auto; height: auto; padding: 80px 24px; }
-  .footer-inner { padding: 40px 24px 20px; }
+  .footer-inner { padding: 40px 34px 20px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-  
+  .footer-links a {color:white;}
+  .footer-address {color:white;}
+  .footer-links h4 {color:white;}
+  .footer-logo {width:620px;}
+  .footer-bottom {font-size:.7rem;}
   }
   @media (max-width: 600px) {
     .sesiones-grid { grid-template-columns: 1fr; }
@@ -1459,41 +1519,251 @@ footer::before {
     .nav-overlay { padding: 80px 30px 40px; }
   }
 
-  /* ── LOADING SCREEN ── */
-  #loading {
-    position: fixed; inset: 0; z-index: 9000;
-    background: var(--blue-deep);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 24px;
-  }
-  .loading-logo { opacity: 0; animation: fadeInUp .8s .2s forwards; }
-  .loading-bar-wrap {
-    width: 200px; height: 2px;
-    background: rgba(255,255,255,.1); border-radius: 2px;
-    overflow: hidden;
-  }
-  .loading-bar {
-    height: 100%; background: var(--gold);
-    animation: loadBar 1.4s ease forwards;
-  }
-  @keyframes loadBar { from { width: 0; } to { width: 100%; } }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* ══ LOADING SCREEN ══ */
+#loading {
+  position: fixed; inset: 0; z-index: 9000;
+  background: var(--blue-deep);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* Máscara radial que funde las palabras hacia los bordes */
+#loading::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(ellipse 52% 48% at 50% 50%,
+    transparent            0%,
+    transparent           10%,
+    rgba(10,26,92,.75)    45%,
+    rgba(10,26,92,.88)    82%,
+    var(--blue-deep)      98%);
+}
+
+/* Isotipo centrado */
+.ldr-iso {
+  position: absolute; z-index: 6;
+  display: flex; align-items: center; justify-content: center;
+  animation: ldrIsoIn .9s .2s cubic-bezier(.16,1,.3,1) both;
+}
+.ldr-iso img { height: 80px; width: auto; }
+
+/* Brillo horizontal */
+.ldr-glow-bar {
+  position: absolute; z-index: 5;
+  width: 300px; height: 3px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.ldr-glow-bar::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(245,166,35,.0)   12%,
+    rgba(255,210,80,.6)   35%,
+    rgba(255,248,180,1)   50%,
+    rgba(255,210,80,.6)   65%,
+    rgba(245,166,35,.0)   88%,
+    transparent 100%);
+  filter: blur(1.5px);
+  border-radius: 3px;
+  animation: ldrBarPulse 2.6s ease-in-out infinite;
+}
+.ldr-glow-bar::after {
+  content: '';
+  position: absolute;
+  top: -10px; left: 5%; right: 5%; height: 22px;
+  background: radial-gradient(ellipse 80% 100% at 50% 50%,
+    rgba(255,195,50,.18) 0%, transparent 70%);
+  filter: blur(5px);
+  animation: ldrBarPulse 2.6s ease-in-out infinite;
+}
+
+/* Destellos */
+.ldr-glow-spark {
+  position: absolute; z-index: 7;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px; height: 2px;
+  pointer-events: none;
+  opacity: 0;
+  animation: ldrSpark 3.2s ease-in-out infinite;
+}
+.ldr-glow-spark::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,220,.0) 20%,
+    rgba(255,255,255,.95) 50%,
+    rgba(255,255,220,.0) 80%,
+    transparent 100%);
+  filter: blur(.4px);
+  border-radius: 2px;
+}
+
+/* Palabras — base */
+.ldr-word {
+  position: absolute;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  animation: ldrWordCycle 4s ease-in-out infinite;
+}
+
+/* Posición, tamaño, color y delay por palabra */
+.ldr-word:nth-child(1) {
+  font-size: clamp(3rem, 5vw, 6.4rem);
+  color: rgba(232, 125, 212, .72);
+  top: 35%; left: 36%;
+  animation-delay: 0s; animation-duration: 4.4s;
+}
+.ldr-word:nth-child(2) {
+  font-size: clamp(5.5rem, 8vw, 7.4rem);
+  color: rgba(90, 184, 200, .65);
+  top: 42%; left: 23%;
+  animation-delay: .5s; animation-duration: 5.1s;
+}
+.ldr-word:nth-child(3) {
+  font-size: clamp(1.8rem, 3.6vw, 3.1rem);
+  color: rgba(232, 184, 75, .68);
+  top: 35%; left: 53%;
+  animation-delay: .9s; animation-duration: 4.7s;
+}
+.ldr-word:nth-child(4) {
+  font-size: clamp(2.2rem, 4.5vw, 3.9rem);
+  color: rgba(77, 184, 160, .60);
+  top: 56%; left: 32%;
+  animation-delay: .25s; animation-duration: 5.3s;
+}
+.ldr-word:nth-child(5) {
+  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+  color: rgba(126, 207, 224, .62);
+  top: 40%; left: 47%; /* aumentado va hacia abajo y aumentando va a la derecha */
+  animation-delay: 1.1s; animation-duration: 4.2s;
+}
+.ldr-word:nth-child(6) {
+  font-size: clamp(1.8rem, 3.8vw, 3.3rem);
+  color: rgba(160, 196, 232, .58);
+  top: 44%; left: 55%;
+  animation-delay: .7s; animation-duration: 5.6s;
+}
+.ldr-word:nth-child(7) {
+  font-size: clamp(3rem, 6.2vw, 5.6rem);
+  color: rgba(140, 165, 220, .42);
+  top: 53%; left: 55%;
+  animation-delay: .15s; animation-duration: 4.9s;
+}
+.ldr-word:nth-child(8) {
+  font-size: clamp(1.2rem, 2.4vw, 2rem);
+  color: rgba(150, 185, 215, .38);
+  top: 51%; left: 53%;
+  animation-delay: .85s; animation-duration: 5.8s;
+}
+
+/* Ciclo: sube desde el fondo, llega a su pico (nunca opacidad 1), baja y desaparece */
+@keyframes ldrWordCycle {
+  0%   { opacity: 0;    transform: translateY(14px) scale(.95); filter: blur(4px); }
+  15%  { opacity: 1;    transform: translateY(0px)  scale(1);   filter: blur(0px); }
+  70%  { opacity: .85;  transform: translateY(-3px) scale(1.01); filter: blur(0px); }
+  88%  { opacity: .6;   transform: translateY(-7px) scale(1.02); filter: blur(1px); }
+  100% { opacity: 0;    transform: translateY(-10px) scale(1.03); filter: blur(6px); }
+}
+
+@keyframes ldrIsoIn {
+  from { opacity: 0; transform: scale(.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes ldrBarPulse {
+  0%,100% { opacity: .45; transform: scaleX(.8); }
+  45%     { opacity: 1;   transform: scaleX(1); }
+  70%     { opacity: .65; transform: scaleX(.92); }
+}
+@keyframes ldrSpark {
+  0%,100% { opacity: 0; transform: translate(-50%,-50%) scaleX(.2); }
+  15%     { opacity: 0; }
+  20%     { opacity: 1; transform: translate(-50%,-50%) scaleX(1); }
+  28%     { opacity: 0; transform: translate(-50%,-50%) scaleX(1.3); }
+  52%     { opacity: 0; }
+  56%     { opacity: .6; transform: translate(-50%,-50%) scaleX(.5); }
+  61%     { opacity: 0; }
+}
+
+/* ── Salida sofisticada ── */
+#loading.ldr-exit .ldr-word {
+  animation: ldrWordOut .8s cubic-bezier(.4,0,1,1) forwards !important;
+}
+#loading.ldr-exit .ldr-word:nth-child(1) { animation-delay: .00s !important; }
+#loading.ldr-exit .ldr-word:nth-child(2) { animation-delay: .05s !important; }
+#loading.ldr-exit .ldr-word:nth-child(3) { animation-delay: .09s !important; }
+#loading.ldr-exit .ldr-word:nth-child(4) { animation-delay: .13s !important; }
+#loading.ldr-exit .ldr-word:nth-child(5) { animation-delay: .17s !important; }
+#loading.ldr-exit .ldr-word:nth-child(6) { animation-delay: .21s !important; }
+#loading.ldr-exit .ldr-word:nth-child(7) { animation-delay: .25s !important; }
+#loading.ldr-exit .ldr-word:nth-child(8) { animation-delay: .29s !important; }
+
+#loading.ldr-exit .ldr-iso img {
+  animation: ldrIsoOut 1s .1s cubic-bezier(.2,0,.6,1) forwards !important;
+}
+#loading.ldr-exit .ldr-glow-bar,
+#loading.ldr-exit .ldr-glow-spark {
+  animation: ldrGlowFade .4s ease forwards !important;
+}
+#loading.ldr-exit::before {
+  animation: ldrMaskOut .9s .2s ease forwards;
+}
+#loading.ldr-exit {
+  animation: ldrBgOut .85s .4s ease forwards;
+}
+
+@keyframes ldrWordOut {
+  to { opacity: 0; transform: translateY(-16px) scale(1.06); filter: blur(5px); }
+}
+@keyframes ldrIsoOut {
+  0%   { opacity: 1;  transform: scale(1);    filter: blur(0px); }
+  40%  { opacity: .9; transform: scale(1.25); filter: blur(0px); }
+  100% { opacity: 0;  transform: scale(1.55); filter: blur(8px); }
+}
+@keyframes ldrGlowFade {
+  to { opacity: 0; }
+}
+@keyframes ldrMaskOut {
+  to { opacity: 0; }
+}
+@keyframes ldrBgOut {
+  to { opacity: 0; }
+}
+
 </style>
 </head>
 <body>
 
 <!-- LOADING SCREEN -->
 <div id="loading">
-  <div class="loading-logo">
-    <svg width="120" height="60" viewBox="0 0 120 60" fill="none">
-      <circle cx="30" cy="30" r="28" stroke="white" stroke-width="1.5" opacity=".4"/>
-      <polygon points="24,18 24,42 44,30" fill="#f5a623"/>
-    </svg>
+  <!-- Palabras flotantes — edita el texto aquí -->
+<span class="ldr-word">Salud</span>        <!-- nth-child(1) -->
+<span class="ldr-word">Ciencia</span>      <!-- nth-child(2) -->
+<span class="ldr-word">Prevención</span>    <!-- nth-child(3) -->
+<span class="ldr-word">Conocimiento</span>  <!-- nth-child(4) -->
+<span class="ldr-word">Encuentro</span>     <!-- nth-child(5) -->
+<span class="ldr-word">Especialistas</span> <!-- nth-child(6) -->
+<span class="ldr-word">Sinergia</span>       <!-- nth-child(7) -->
+<span class="ldr-word">Rejuvenecimiento</span> <!-- nth-child(8) -->
+
+  <!-- Isotipo -->
+  <div class="ldr-iso">
+    <img src="iso-iced-web.png" alt="ICED" />
   </div>
-  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+
+  <!-- Brillo horizontal + destellos -->
+  <div class="ldr-glow-bar"></div>
+  <div class="ldr-glow-spark"></div>
 </div>
 
 <!-- CURSOR -->
@@ -1559,7 +1829,7 @@ footer::before {
 
   <!-- Foto doctores — aparece desde abajo -->
   <div class="hero-doctors" id="hero-doctors">
-    <img src="doctores.png"
+    <img src="doctores-4.png"
          alt="Médicos especialistas" />
   </div>
 
@@ -1650,8 +1920,8 @@ footer::before {
               <img src="icono-celeste-share-8.png" alt="Compartir ICED">
             </div>
             <div>
-              <div class="srv-text-title" style="text-align:right;">Compartimos conocimiento y experiencia.</div>
-              <div class="srv-text-body" style="text-align:right;">Ayudamos a acercar la ciencia a la vida diaria, inspirando a nuestra comunidad a cuidarse, prevenir y vivir con propósito. </div>
+              <div class="srv-text-title" style="text-align:center;">Compartimos conocimiento y experiencia.</div>
+              <div class="srv-text-body" style="text-align:center;">Ayudamos a acercar la ciencia a la vida diaria, inspirando a nuestra comunidad a cuidarse, prevenir y vivir con propósito. </div>
             </div>
           </div>
         </div>
@@ -1662,7 +1932,7 @@ footer::before {
         <div class="srv-slide-inner">
           <div class="srv-col-left">
             <div class="srv-icon-wrap">
-              <img src="capitulos-iced-8.png" alt="Iderma Capilar Educa">
+              <img src="icono-celeste-book-8.png" alt="Iderma Capilar Educa">
             </div>
             <div>
               <div class="srv-text-title">Capítulos y Sesiones</div>
@@ -1681,8 +1951,8 @@ footer::before {
               <img src="icono-celeste-chat-8.png" alt="Expositores ICED">
             </div>
             <div>
-              <div class="srv-text-title" style="text-align:right;">Expositores seleccionados</div>
-              <div class="srv-text-body" style="text-align:right;">Médicos y especialistas de trayectoria comprobada, comprometidos con educar y transformar la salud de nuestra comunidad.</div>
+              <div class="srv-text-title" style="text-align:center;">Expositores seleccionados</div>
+              <div class="srv-text-body" style="text-align:center;">Médicos y especialistas de trayectoria comprobada, comprometidos con educar y transformar la salud de nuestra comunidad.</div>
             </div>
           </div>
         </div>
@@ -1710,11 +1980,11 @@ footer::before {
           </div>
           <div class="srv-col-right">
             <div class="srv-icon-wrap">
-              <img src="impacto-iced-8.png-8" alt="Convenios ICED">
+              <img src="icono-celeste-teach-8.png" alt="Convenios ICED">
             </div>
             <div>
-              <div class="srv-text-title" style="text-align:right;">Impacto Nacional</div>
-              <div class="srv-text-body" style="text-align:right;">Una comunidad que crece con propósito. Llevamos salud, ciencia y conciencia a cada rincón del país y más allá.</div>
+              <div class="srv-text-title" style="text-align:center;">Impacto Nacional</div>
+              <div class="srv-text-body" style="text-align:center;">Una comunidad que crece con propósito. Llevamos salud, ciencia y conciencia a cada rincón del país y más allá.</div>
             </div>
           </div>
         </div>
@@ -1815,7 +2085,7 @@ footer::before {
 <section id="sesiones" class="sesiones">
   <!-- Fondo de video -->
   <video class="sesiones-bg" autoplay muted loop playsinline preload="auto">
-    <source src="especialistas.mp4" type="video/mp4">
+    <source src="expositores-3.mp4" type="video/mp4">
   </video>
   <div class="sesiones-overlay"></div>
 
@@ -1945,12 +2215,24 @@ footer::before {
 <script>
 // ── LOADING ──
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    const loading = document.getElementById('loading');
-    loading.style.transition = 'opacity .6s ease';
-    loading.style.opacity = '0';
-    setTimeout(() => { loading.style.display = 'none'; initAnimations(); }, 600);
-  }, 1600);
+  const loading = document.getElementById('loading');
+  // Espera mínima para que las palabras hagan al menos un ciclo visible
+  const minWait = 2000;
+  const startTime = performance.now();
+
+  function dismiss() {
+    const elapsed = performance.now() - startTime;
+    const delay = Math.max(0, minWait - elapsed);
+    setTimeout(() => {
+      loading.classList.add('ldr-exit');
+      setTimeout(() => {
+        loading.style.display = 'none';
+        initAnimations();
+      }, 1200);
+    }, delay);
+  }
+
+  dismiss();
 });
 
 // ── CURSOR ──
