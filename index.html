@@ -266,10 +266,10 @@
     width: 480px; height: 480px;
     border-radius: 10% 10% 10% 10% / 10% 10% 10% 10%;
     background: linear-gradient(
-      225deg,
+      290deg,
       rgba(195,130,0,.95) 0%,
       rgba(245,166,35,.60) 45%,
-      rgba(245,166,35,.15) 70%,
+      rgba(245,166,35,.45) 70%,
       transparent 100%
     );
     transform: rotate(35deg) translateX(120%);
@@ -378,13 +378,14 @@
 
   /* Mobile */
   @media (max-width: 480px) {
-    .hero-left-wrap { margin-left: 0; padding: 190px 20px 0; }
+	.hero {background: var(--blue-light);}
+    .hero-left-wrap { margin-left: 0; padding: 170px 24px 0; }
     .hero-title-big { font-size: clamp(2rem, 11vw, 3rem); white-space: normal; }
     .hero-eyebrow   { font-size: clamp(1.1rem, 9vw, 1.9rem); white-space: normal; }
     .hero-sub       { font-size: 1.9rem; max-width: 100%; line-height: 1.1; }
     .hero-doctors   { display: none; }
-    .hero-tri-top   { width: 200px; height: 200px; }
-    .hero-tri-bot   { width: 180px; height: 180px; }
+    .hero-tri-top   { width: 360px; height: 360px; }
+    .hero-tri-bot   { width: 380px; height: 380px; }
 	.srv-glow-line { display: none;}
 	.logo-wrap {height: 30px; width: auto; display: block;}
   }
@@ -863,7 +864,7 @@
   .srv-text-body {
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 200;
-    font-size: clamp(.82rem, 1.5vw, 1.2rem);
+    font-size: clamp(.96rem, 1.5vw, 1.2rem);
     color: var(--text-body);
     line-height: 1.75;
     font-style: italic;
@@ -964,16 +965,19 @@
     .srv-slide-inner {
       grid-template-columns: 1fr;
       grid-template-rows: auto auto auto;
-      padding: 100px 24px 120px;
-      gap: 36px;
+      padding: 121px 24px 120px;
+      gap: 8px;
       text-align: center;
     }
     .srv-col-left  { align-items: center; padding-right: 0 50px; }
     .srv-col-right { align-items: center; padding-left: 0; text-align: center; }
     .srv-col-right .srv-icon-wrap { margin: 0 auto; }
-	.srv-text-title {font-size:1.2rem; text-align: center;}
+	.srv-text-title {font-size:1.5rem; text-align: center;}
 	.logo-wrap: {height: 36px; width: auto; display: block;}
+	.srv-icon-wrap {height: 150px;}
+	.srv-icon-wrap img {height: 133px;}
 	.srv-logo-wrap img {display:none;}
+	.srv-header {top: 9%;}
   }
 
   /* ── QUIENES SOMOS ── */
@@ -1174,10 +1178,11 @@
     .quienes-slide { grid-template-columns: 1fr; }
     .quienes-img-wrap { height: 40%; }
     .quienes-img-wrap::after {
-      background: linear-gradient(to bottom, transparent 50%, rgba(5,14,61,.95) 100%);
-    }
-    .quienes-text { padding: 24px; }
+      background: linear-gradient(to bottom, transparent 50%, rgba(5,14,61,.95) 100%);}
+    .quienes-text { padding: 60px; }
+	.quienes-text-tittle { margin-bottom: 40px; }
 	.quienes-slider {bottom:0;}
+	.quienes-header {top: 9%;}
   }
 
   /* ── SESIONES ── */
@@ -1642,7 +1647,7 @@ footer::before {
 .ldr-word:nth-child(8) {
   font-size: clamp(2.3rem, 6.8vw, 6.8rem);
   color: rgba(160,148,105,.65);
-  top: calc(50% + 80px); left: calc(50% + 50px); /* ← SINERGIA */
+  top: calc(50% + 70px); left: calc(50% + 50px); /* ← SINERGIA */
   animation: ldrWordFade 9s 4.8s ease-in-out forwards;
 }
 
