@@ -1207,7 +1207,7 @@
 .sesiones-title{
   color:#fff;
   text-align:center;
-  font-size:clamp(18px, 2vw, 24px);
+  font-size:clamp(24px, 2vw, 24px);
   font-weight:600;
   line-height:1.4;
   max-width:900px;
@@ -1420,7 +1420,7 @@ footer::before {
 .footer-grid {
   max-width: 1400px;
   width: 100%;
-  margin: 0 auto 24px;
+  margin: 12px auto 22px;
   display: grid;
   grid-template-columns: 1.1fr 1fr 1fr;
   gap: 56px;
@@ -1442,7 +1442,7 @@ footer::before {
   font-style: italic; color: var(--blue-light);
   font-size: .95rem; margin-bottom: 16px;
 }
-.footer-address { font-family: 'Roboto Condensed', sans-serif; font-size: 1rem; color: var(--text-body); line-height: 1.7; }
+.footer-address { font-family: 'Roboto Condensed', sans-serif; font-size: 1rem; color: var(--text-body); line-height: 1.7; font-weight: 100; }
 
 .footer-social { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .footer-social-label {
@@ -1504,18 +1504,18 @@ footer::before {
     .quienes-img-wrap { height: 250px; }
     .quienes-text { padding: 30px 60px; line-height:2;  }
     .sesiones-grid { grid-template-columns: 1fr 1fr; }
-    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-    header { padding: 16px 20px; }
+    .header { padding: 16px 20px; }
     .sesiones-grid { padding: 0 20px; }
-	  footer { height: auto; min-height: 0; }
+	  .footer { height: auto; min-height: 0; }
   #cta { flex: 0 0 auto; height: auto; padding: 80px 24px; }
   .footer-inner { padding: 40px 34px 20px; }
-  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-  .footer-links a {color:white;}
+  .footer-grid { grid-template-columns: 1fr; gap: 20px; }
+  .footer-links a {font-size: clamp(16px, 2vw, 24px); color:white;}
   .footer-address {color:white;}
   .footer-links h4 {color:white;}
-  .footer-logo {width:620px;}
-  .footer-bottom {font-size:.7rem;}
+  .footer-brand .footer-logo {width:280px; margin-top: 20px;}
+  .footer-brand-link {margin-top:28px;}
+  .footer-bottom {font-size:.7rem; padding-bottom: 20px; margin: 0 0 33px;}
   }
   @media (max-width: 600px) {
     .sesiones-grid { grid-template-columns: 1fr; }
@@ -2083,14 +2083,14 @@ footer::before {
       </a>
 
       <!-- Tarjeta 2 -->
-      <a href="https://tu-enlace-2.com" class="sesion-card" target="_blank" rel="noopener">
+      <a href="expositores.html" class="sesion-card" target="_blank" rel="noopener">
         <span class="sesion-tag">NUEVO</span>
         <img class="sesion-img" src="arias.png" alt="Sesión 2">
         <div class="sesion-caption">
           <div class="sesion-caption-text">
             <span class="sesion-meta">C3 S7 | 18/09/2025</span>
-            <span class="sesion-title-card">Microbiota + hormonas: la fórmula del bienestar 40+</span>
-			<span class="sesion-meta-text">La Dra. Anet Mary Arias Escalona revelará cómo microbiota y hormonas impactan energía, metabolismo y bienestar integral después de los 40 años.  </span>
+            <span class="sesion-title-card">Cómo nutrirse con conciencia, paso a paso.</span>
+			<span class="sesion-meta-text">La nutricionista Dra. María Daniella Romero, con más de 15 años de experiencia en el ámbito clínico, revelará la ciencia de nutrirse con conciencia.</span>
           </div>
 			<svg class="sesion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
