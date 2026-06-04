@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IDERMA CAPILAR EDUCA | Salud, Ciencia y Conciencia — Educación Médica Premium</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="educación en salud integral, prevención y bienestar consciente, longevidad y salud preventiva, plataforma médica educativa, expertos en salud y bienestar, salud preventiva Lima Perú" name="keywords">
+    <meta content="Plataforma de educación en salud integral con expertos nacionales e internacionales. Aprende a prevenir, cuidarte y vivir con propósito. Ciencia accesible para una vida plena. Lima, Perú." name="description">
+	
+	    <!-- Favicon -->
+	<link rel="icon" href="favicon.png" type="image/png">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+  <style>
+    /* =============================================
+       CSS VARIABLES — matching index palette
+    ============================================= */
+    :root {
+      --navy:        #0a0f2e;
+      --navy-mid:    #0d1540;
+      --blue-deep:   #0e2057;
+      --blue:        #1a3a8f;
+      --blue-bright: #1e6bff;
+      --cyan:        #66c1ff;
+      --gold:        #c9960a;
+      --gold-light:  #f0b429;
+      --gold-btn:    #d4a017;
+      --white:       #ffffff;
+      --off-white:   #f4f6fb;
+      --text-body:   #1a1a2e;
+      --text-muted:  #5a607a;
+      --radius:      8px;
+      --radius-lg:   16px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--off-white);
+      color: var(--text-body);
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* =============================================
+       HAMBURGER NAVIGATION (same as index)
+    ============================================= */
+    .nav-wrap {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: linear-gradient(180deg, rgba(10,15,46,0.95) 0%, rgba(10,15,46,0.0) 100%);
+      transition: background 0.3s;
+    }
+    .nav-wrap.scrolled {
+      background: rgba(10,15,46,0.97) !important;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    }
+
+    .nav-logo img {
+      height: 44px;
+      width: auto;
+    }
+
+    .hamburger {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,15,46,0.97);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .nav-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .nav-overlay a {
+      color: var(--white);
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-overlay a:hover { color: var(--cyan); }
+    .nav-overlay .nav-inst {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      width: 100%;
+    }
+    .nav-overlay .nav-inst-label {
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .nav-close-hint {
+      position: absolute;
+      top: 22px;
+      right: 34px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* =============================================
+       HERO BANNER — dark navy gradient + animated text
+    ============================================= */
+    .hero {
+      position: relative;
+      min-height: 420px;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue-deep) 55%, #0a1a55 100%);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    /* decorative diagonal gold line */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 30%, rgba(201,150,10,0.08) 100%);
+      clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+
+    /* subtle star-dust overlay */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 140px 40px 64px;
+    }
+
+    /* ---- animated tagline ---- */
+    .tagline-block {
+      margin-bottom: 16px;
+      min-height: 3em;
+    }
+
+    .tagline-compartimos {
+      display: block;
+	  font-family: "Roboto Condensed", san-serif; 
+      font-size: clamp(1rem, 2.5vw, 2rem);
+	  font-style: italic;
+      font-weight: 300;
+      letter-spacing: 0;
+      color: var(--cyan);
+      animation: blurCycle 7s ease-in-out infinite;
+	  transform-origin: center center;
+	  will-change: transform, opacity, filter;
+    }
+
+    .tagline-sub {
+      display: block;
+	  font-family: "Roboto Condensed", san-serif;
+      font-size: clamp(0.65rem, 1.5vw, 1.52rem);
+	  font-style: italic;
+      font-weight: 300;
+      letter-spacing: 0;
+      color: rgba(255,255,255,0.75);
+	  margin-left: 33px;
+      animation: subCycle 7s ease-in-out infinite;
+	  transform-origin: center center;
+	  will-change: transform, opacity, filter;
+    }
+
+    @keyframes blurCycle {
+      0%   { filter: blur(8px);   opacity: 0.20; transform: scale(0.92); }
+      18%  { filter: blur(0px);   opacity: 1; transform: scale(1.02); }
+      40%  { filter: blur(0px);  opacity: 1; transform: scale(1.02);}
+      80%  { filter: blur(2px);  opacity: 0; transform: scale(1);}
+      100% { filter: blur(8px);   opacity: 0; transform: scale(1);}
+    }
+
+    @keyframes subCycle {
+      0%   { filter: blur(6px);  opacity: 0.2; transform: scale(0.92); }
+      24%  { filter: blur(0px);  opacity: 1; transform: scale(1.02); }
+      55%  { filter: blur(0px);  opacity: 1; transform: scale(1.02);}
+      90%  { filter: blur(3px);  opacity: 0; transform: scale(1);}
+      100% { filter: blur(6px);  opacity: 0; transform: scale(1); }
+    }
+
+    /* hero title */
+    .hero-title {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 200;
+      line-height: 1.0;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--cyan);
+      font-family: 'Outfit', serif;
+      font-weight: 800;
+    }
+    .hero-title .gold-line {
+      display: block;
+      font-size: clamp(1.2rem, 2.2vw, 2.5rem);
+      font-weight: 200;
+      letter-spacing: 0;
+      color: var(--white);
+      margin-top: 10px;
+    }
+
+    /* =============================================
+       BREADCRUMB
+    ============================================= */
+    .breadcrumb {
+      background: var(--navy-mid);
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .breadcrumb-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .breadcrumb-inner a { color: var(--cyan); transition: opacity 0.2s; }
+    .breadcrumb-inner a:hover { opacity: 0.75; }
+    .breadcrumb-inner span { color: rgba(255,255,255,0.3); }
+
+    /* =============================================
+       MAIN CONTENT LAYOUT
+    ============================================= */
+    .page-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 40px;
+      display: grid;
+      grid-template-columns: 260px 1fr 260px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* ---- LEFT SIDEBAR: speaker photo + credentials ---- */
+    .sidebar-left {
+      position: sticky;
+      top: 100px;
+    }
+
+    .speaker-photo-wrap {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .speaker-photo-wrap img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+    }
+    .speaker-photo-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(to top, rgba(10,15,46,0.9) 0%, transparent 100%);
+    }
+
+    .credentials-box {
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border-left: 3px solid var(--cyan);
+    }
+    .credentials-box .icon-grad {
+      width: 40px;
+      margin-bottom: 16px;
+      opacity: 0.85;
+    }
+    .credential-item {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.5;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .credential-item:last-child { border-bottom: none; }
+    .credential-item strong {
+      display: block;
+      color: var(--cyan);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    /* ---- CENTER: article content ---- */
+    .article-content {
+      min-width: 0;
+    }
+
+    .session-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .tag-new  { background: var(--cyan); color: var(--navy); }
+    .tag-date { background: rgba(10,15,46,0.08); color: var(--text-muted); border: 1px solid rgba(10,15,46,0.12); }
+    .tag-cap  { background: rgba(30,107,255,0.1); color: var(--blue); border: 1px solid rgba(30,107,255,0.2); }
+
+    .expositor-name {
+      font-size: clamp(0.75rem, 1.5vw, 0.82rem);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .session-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--navy);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .session-subtitle {
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 32px;
+    }
+
+    .article-lead {
+      font-size: clamp(0.88rem, 1.5vw, 1.2rem);
+      font-weight: 400;
+      color: var(--text-body);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .article-lead strong {
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .article-body {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .article-body h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 32px 0 12px;
+    }
+
+    .highlight-quote {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.75;
+      border-left: 3px solid var(--cyan);
+      padding-left: 20px;
+      margin: 20px 0 24px;
+    }
+
+    /* session pagination */
+    .session-nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 24px 0;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      margin-top: 40px;
+    }
+    .session-nav a {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .session-nav a:hover { color: var(--cyan); }
+
+    /* ---- RIGHT SIDEBAR: topics ---- */
+    .sidebar-right {
+      position: sticky;
+      top: 100px;
+    }
+
+    .topics-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .topic-btn {
+      display: block;
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: var(--radius);
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-align: center;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .topic-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+
+    .topic-btn.outline {
+      background: transparent;
+      border: 0 solid var(--navy);
+      color: var(--navy);
+    }
+    .topic-btn.outline:hover { background: var(--gold-light); color: var(--white); }
+
+    .topic-btn.filled {
+      background: var(--blue-deep);
+      border: 2px solid var(--blue-deep);
+      color: var(--white);
+    }
+
+    .glucose-icon {
+      background: var(--off-white);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 24px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .glucose-icon .number {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .glucose-icon .unit {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* =============================================
+       EMAIL SUBSCRIPTION BAND
+    ============================================= */
+    .subscribe-band {
+      background: var(--off-white);
+      border-top: 1px solid rgba(0,0,0,0.07);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      padding: 56px 40px;
+      text-align: center;
+    }
+    .subscribe-band p {
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 24px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+    .subscribe-band p strong { color: var(--blue); }
+    .subscribe-form {
+      display: flex;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+    .subscribe-form input {
+      flex: 1;
+      padding: 15px 20px;
+      border: none;
+      outline: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-body);
+      background: var(--white);
+    }
+    .subscribe-form input::placeholder { color: rgba(90,96,122,0.55); }
+    .subscribe-form button {
+      padding: 15px 24px;
+      background: var(--gold-btn);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .subscribe-form button:hover { background: var(--gold); }
+
+    /* =============================================
+       SESSIONS SLIDER / CAROUSEL
+    ============================================= */
+    .sessions-section {
+      background: var(--navy);
+      padding: 64px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .sessions-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .sessions-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .sessions-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .sessions-header h2 {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 800;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .sessions-header h2 em {
+      color: var(--cyan);
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .carousel-wrap {
+      position: relative;
+    }
+
+    .carousel-track {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .carousel-slide {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: none;
+      cursor: pointer;
+    }
+    .carousel-slide.active { display: block; }
+
+    .carousel-slide-inner {
+      display: flex;
+      align-items: center;
+      min-height: 360px;
+      background: linear-gradient(135deg, var(--navy-mid) 0%, var(--blue-deep) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .carousel-slide-inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(10,15,46,0.92) 35%, rgba(10,15,46,0.35) 100%);
+      z-index: 1;
+    }
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      opacity: 0.35;
+    }
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      padding: 48px 56px;
+      max-width: 640px;
+    }
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--cyan);
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .slide-cap-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+    .slide-title {
+      font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+      font-weight: 900;
+      color: var(--white);
+      text-transform: uppercase;
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+    .slide-desc {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .slide-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 28px;
+      background: var(--gold-btn);
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .slide-cta:hover { background: var(--gold); transform: translateY(-2px); }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: var(--white);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .carousel-btn:hover { background: rgba(255,255,255,0.2); }
+    .carousel-btn.prev { left: -24px; }
+    .carousel-btn.next { right: -24px; }
+
+    /* =============================================
+       CTA SECTION (¿Quieres ser parte?)
+    ============================================= */
+    .cta-section {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-btn) 50%, #a07a08 100%);
+      padding: 72px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .cta-section > * { position: relative; z-index: 1; }
+    .cta-section h2 {
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      font-weight: 900;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.9);
+      max-width: 580px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .cta-btn {
+      display: inline-flex;
+      padding: 15px 36px;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .cta-btn:hover { background: var(--blue); transform: translateY(-2px); }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    .footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.7);
+      padding: 56px 40px 32px;
+    }
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand img { height: 52px; margin-bottom: 20px; }
+    .footer-brand p {
+      font-size: 0.72rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .footer-col h4 {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 10px;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--cyan); }
+    .footer-col.institutional h4 { color: var(--gold-light); }
+
+    .social-row {
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+    }
+    .social-row a {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+      transition: background 0.2s, color 0.2s;
+      margin-bottom: 0;
+    }
+    .social-row a:hover { background: var(--cyan); color: var(--navy); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 1024px) {
+      .page-body {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "left center"
+          "right center";
+      }
+      .sidebar-left { grid-area: left; }
+      .article-content { grid-area: center; }
+      .sidebar-right {
+        grid-area: right;
+        position: static;
+      }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-wrap { padding: 14px 20px; }
+      .page-body {
+        grid-template-columns: 1fr;
+        grid-template-areas: "left" "center" "right";
+        padding: 40px 20px;
+        gap: 32px;
+      }
+      .sidebar-left { position: static; }
+      .sidebar-right { position: static; }
+      .hero-inner { padding: 120px 20px 48px; }
+      .breadcrumb-inner { padding: 0 20px; }
+      .subscribe-band { padding: 40px 20px; }
+      .subscribe-form { flex-direction: column; border-radius: var(--radius); }
+      .subscribe-form input,
+      .subscribe-form button { border-radius: var(--radius); }
+      .sessions-inner { padding: 0 20px; }
+      .slide-content { padding: 32px 28px; }
+      .carousel-btn.prev { left: 4px; }
+      .carousel-btn.next { right: 4px; }
+      .cta-section { padding: 56px 20px; }
+      .footer { padding: 40px 20px 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVIGATION (hamburger)
+  ============================================= -->
+  <nav class="nav-wrap" id="mainNav">
+    <a class="nav-logo" href="index.html" aria-label="Inicio">
+      <img src="https://idermacapilar-creator.github.io/iced/iso-iced-web.png" alt="ICED Logo" />
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay" role="dialog" aria-modal="true">
+    <span class="nav-close-hint">ESC para cerrar</span>
+    <a href="index.html#hero">Inicio</a>
+    <a href="index.html#servicios">Propuestas de valor</a>
+    <a href="index.html#quienes">Quiénes somos</a>
+    <a href="expositores.html">Expositores</a>
+    <a href="index.html#cta">Participación</a>
+    <a href="index.html#footer">Contacto</a>
+    <div class="nav-inst">
+      <span class="nav-inst-label">Institucional</span>
+      <a href="#">Convenios</a>
+      <a href="#">Trabaja con nosotros</a>
+    </div>
+  </div>
+
+  <!-- =============================================
+       HERO BANNER
+  ============================================= -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="tagline-block">
+        <span class="tagline-compartimos">Compartimos</span>
+        <span class="tagline-sub">CONOCIMIENTO Y EXPERIENCIA</span>
+      </div>
+      <h1 class="hero-title">
+        TEMA:<br/>
+        <em>Domina tu Azúcar</em>
+        <span class="gold-line">Y Desinflama tu Cuerpo</span>
+      </h1>
+    </div>
+  </section>
+
+  <!-- =============================================
+       BREADCRUMB
+  ============================================= -->
+  <div class="breadcrumb">
+    <div class="breadcrumb-inner">
+      <a href="index.html">Inicio</a>
+      <span>›</span>
+      <a href="#">Expositores</a>
+      <span>›</span>
+      <span style="color:rgba(255,255,255,0.6);">Lic. María Gabriela Pérez</span>
+    </div>
+  </div>
+
+  <!-- =============================================
+       MAIN CONTENT
+  ============================================= -->
+  <main class="page-body">
+
+    <!-- LEFT: speaker profile -->
+    <aside class="sidebar-left">
+      <div class="speaker-photo-wrap">
+        <img
+          src="dra-perez-metabolismo-iced.png"
+          alt="Lic. María Gabriela Pérez"
+        />
+      </div>
+
+      <div class="credentials-box">
+        <img
+          class="icon-grad"
+          src="https://idermacapilar-creator.github.io/iced/icono-celeste-book-8.png"
+          alt="Credenciales"
+        />
+        <div class="credential-item">
+          <strong>Formación</strong>
+          Licenciada en Nutrición y Dietética
+        </div>
+        <div class="credential-item">
+          <strong>Especialidad</strong>
+          Nutrición Clínica — Hospital Universitario de los Andes, Venezuela
+        </div>
+        <div class="credential-item">
+          <strong>Experiencia</strong>
+          Unidad de Nefrología, Diálisis y Trasplante Renal
+        </div>
+        <div class="credential-item">
+          <strong>Certificación</strong>
+          Educadora en Diabetes por la IDF
+        </div>
+        <div class="credential-item">
+          <strong>Área adicional</strong>
+          Nutrición Cardiometabólica y Nutrición Bariátrica
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: article -->
+    <article class="article-content">
+      <div class="session-meta">
+        <span class="tag tag-new">Nuevo</span>
+        <span class="tag tag-cap">Capítulo 3 · Sesión 11</span>
+        <span class="tag tag-date">10 / 05 / 2026</span>
+      </div>
+
+      <p class="expositor-name">Lic. María Gabriela Pérez</p>
+
+      <h2 class="session-title">Domina tu Azúcar</h2>
+      <p class="session-subtitle">Y Desinflama tu Cuerpo</p>
+
+      <p class="article-lead">
+        Como parte de nuestro compromiso con la educación y el bienestar integral, realizamos una nueva
+        edición de <strong>Iderma Capilar Educa</strong>, un espacio diseñado para compartir conocimientos
+        que contribuyan a mejorar la calidad de vida de nuestra comunidad.
+      </p>
+
+      <p class="article-body">
+        En esta oportunidad, contamos con la destacada participación de la Lic. María Gabriela Pérez,
+        quien desarrolló la charla educativa titulada <em>"Domina tu azúcar y desinflama tu cuerpo:
+        la clave nutricional para frenar el envejecimiento desde adentro"</em>, transmitida vía
+        streaming para llegar a más personas interesadas en el cuidado de su salud.
+      </p>
+
+      <p class="article-body">
+        Durante la exposición, se abordó la relación entre los niveles elevados de azúcar en el organismo,
+        los procesos inflamatorios crónicos y su impacto en el envejecimiento celular. Asimismo, se
+        brindaron recomendaciones prácticas sobre hábitos alimenticios, selección de alimentos y
+        estrategias nutricionales orientadas a promover una mejor salud metabólica y un envejecimiento
+        más saludable.
+      </p>
+
+      <h3>Importancia de las decisiones conscientes</h3>
+
+      <p class="article-body">
+        La especialista destacó la importancia de adoptar decisiones conscientes en la alimentación diaria,
+        resaltando que pequeños cambios sostenidos en el tiempo pueden generar beneficios significativos
+        para el bienestar general, la energía, la salud de la piel y la prevención de diversas enfermedades.
+      </p>
+
+      <p class="highlight-quote">
+        Agradecemos a todos los participantes que se conectaron a esta enriquecedora jornada y los invitamos
+        a seguir atentos a las próximas actividades de Iderma Capilar Educa, donde continuaremos promoviendo
+        conocimiento basado en la prevención, la ciencia y el cuidado integral de la salud.
+      </p>
+
+      <nav class="session-nav" aria-label="Navegación de sesiones">
+        <a href="#">&#8592; Sesión anterior</a>
+        <a href="#">Sesión siguiente &#8594;</a>
+      </nav>
+    </article>
+
+    <!-- RIGHT: topics -->
+    <aside class="sidebar-right">
+      <div class="glucose-icon">
+        <div class="number">102</div>
+        <div class="unit">mg/dL · Glucosa</div>
+      </div>
+
+      <p class="topics-label">Temas tratados</p>
+
+      <a class="topic-btn outline" href="#">Niveles de azúcar</a>
+      <a class="topic-btn filled" href="#">Procesos inflamatorios</a>
+      <a class="topic-btn outline" href="#">Recomendaciones prácticas</a>
+      <a class="topic-btn filled" href="#">Selección de alimentos</a>
+      <a class="topic-btn outline" href="#">Estrategias nutricionales</a>
+    </aside>
+
+  </main>
+
+  <!-- =============================================
+       EMAIL SUBSCRIPTION
+  ============================================= -->
+  <section class="subscribe-band">
+    <p>
+      Sé el primero en enterarte de nuestros <strong>eventos, sesiones, transmisiones</strong> y mucho más.
+    </p>
+    <div class="subscribe-form">
+      <input type="email" placeholder="Ingresa tu correo electrónico" aria-label="Correo electrónico" />
+      <button type="button">Quiero Suscribirme</button>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SESSIONS CAROUSEL
+  ============================================= -->
+  <section class="sessions-section">
+    <div class="sessions-inner">
+      <div class="sessions-header">
+        <h2>Ciclo 1: <em>Longevidad y Antienvejecimiento</em></h2>
+      </div>
+
+      <div class="carousel-wrap">
+
+        <!-- Slide 1 -->
+        <div class="carousel-slide active" data-index="0">
+          <div class="carousel-slide-inner">
+            <img class="slide-bg" src="https://idermacapilar-creator.github.io/iced/doctores-iced.png" alt="" aria-hidden="true" />
+            <div class="slide-content">
+              <span class="slide-tag">Nuevo</span>
+              <p class="slide-cap-label">C3 · S11 | 10/05/2026</p>
+              <h3 class="slide-title">Reinventa<br/>Tu Edad</h3>
+              <p class="slide-desc">Claves científicas para una edad poderosa. Descubre cómo la nutrición y el estilo de vida pueden transformar tu salud metabólica y retrasar el envejecimiento celular.</p>
+              <a href="#" class="slide-cta">Ver Ahora &#8594;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-slide" data-index="1">
+          <div class="carousel-slide-inner">
+            <img class="slide-bg" src="https://idermacapilar-creator.github.io/iced/iced-1903-1.png" alt="" aria-hidden="true" />
+            <div class="slide-content">
+              <span class="slide-tag">Nuevo</span>
+              <p class="slide-cap-label">C3 · S7 | 18/09/2025</p>
+              <h3 class="slide-title">Microbiota +<br/>Hormonas</h3>
+              <p class="slide-desc">La fórmula del bienestar 40+. La Dra. Anet Mary Arias Escalona revela cómo la microbiota y las hormonas impactan la energía y el metabolismo.</p>
+              <a href="#" class="slide-cta">Ver Ahora &#8594;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-slide" data-index="2">
+          <div class="carousel-slide-inner">
+            <img class="slide-bg" src="https://idermacapilar-creator.github.io/iced/doctores-4.png" alt="" aria-hidden="true" />
+            <div class="slide-content">
+              <span class="slide-tag">Nuevo</span>
+              <p class="slide-cap-label">C3 · S15 | 26/12/2025</p>
+              <h3 class="slide-title">Cáncer de<br/>Vagina y Vulva</h3>
+              <p class="slide-desc">Prevención, detección y tratamiento. El Dr. Luis Fernando Torres Gil promueve la conciencia y el cuidado ginecológico oportuno.</p>
+              <a href="#" class="slide-cta">Ver Ahora &#8594;</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-btn prev" aria-label="Anterior">&#8249;</button>
+        <button class="carousel-btn next" aria-label="Siguiente">&#8250;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       CTA: ¿Quieres ser parte?
+  ============================================= -->
+  <section class="cta-section" id="cta">
+    <h2>¿Quieres ser parte de esta iniciativa?</h2>
+    <p>
+      Si eres profesional de la salud, institución educativa o simplemente una persona comprometida
+      con vivir mejor — hay un lugar para ti en <strong style="color:var(--white);">IDERMA CAPILAR EDUCA</strong>.
+    </p>
+    <a href="#footer" class="cta-btn">Solicitar información</a>
+  </section>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer class="footer" id="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html">
+          <img src="https://idermacapilar-creator.github.io/iced/logotipo-iderma-educa-footer.png" alt="Iderma Capilar Educa" />
+        </a>
+        <p>
+          Edificio Empresarial José Pardo, Piso 19, Oficina 1903<br/>
+          Calle Mártir José Olaya 129, Miraflores. Lima, Perú.
+        </p>
+        <div class="social-row" style="margin-top:16px;">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="TikTok">t</a>
+          <a href="#" aria-label="Instagram">ig</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Síguenos</h4>
+        <a href="#">Facebook</a>
+        <a href="#">TikTok</a>
+        <a href="#">Instagram</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <a href="index.html#servicios">Propuestas de valor</a>
+        <a href="index.html#quienes">Quiénes Somos</a>
+        <a href="expositores.html">Expositores</a>
+        <a href="index.html#cta">Participación</a>
+        <a href="#footer">Contacto</a>
+      </div>
+
+      <div class="footer-col institutional">
+        <h4>Institucional</h4>
+        <a href="#">Convenios</a>
+        <a href="#">Trabaja con nosotros</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 - IDERMA CAPILAR EDUCA. Derechos reservados del Autor.
+    </div>
+  </footer>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    // --- Hamburger menu ---
+    const hamburger   = document.getElementById('hamburger');
+    const navOverlay  = document.getElementById('navOverlay');
+    const mainNav     = document.getElementById('mainNav');
+
+    function toggleMenu(open) {
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+      navOverlay.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = navOverlay.classList.contains('open');
+      toggleMenu(!isOpen);
+    });
+
+    navOverlay.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => toggleMenu(false))
+    );
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') toggleMenu(false);
+    });
+
+    // --- Scroll: add background to nav ---
+    window.addEventListener('scroll', () => {
+      mainNav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // --- Carousel ---
+    const slides = document.querySelectorAll('.carousel-slide');
+    let current = 0;
+
+    function goTo(idx) {
+      slides[current].classList.remove('active');
+      current = (idx + slides.length) % slides.length;
+      slides[current].classList.add('active');
+    }
+
+    document.querySelector('.carousel-btn.prev').addEventListener('click', () => goTo(current - 1));
+    document.querySelector('.carousel-btn.next').addEventListener('click', () => goTo(current + 1));
+
+    // Auto-advance every 5 s
+    setInterval(() => goTo(current + 1), 5000);
+  </script>
+</body>
+</html>
