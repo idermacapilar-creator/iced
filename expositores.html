@@ -587,27 +587,34 @@
       color: var(--white);
     }
 
-    .glucose-icon {
-      background: var(--off-white);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 24px;
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-    .glucose-icon .number {
-      font-size: 3rem;
-      font-weight: 900;
-      color: var(--navy);
-      line-height: 1;
-    }
-    .glucose-icon .unit {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
+.glucose-icon{
+    position:relative;
+    overflow:visible;
+    min-height:280px;
+    margin-bottom:24px;
+}
+
+.glucose-icon::before{
+    content:"";
+    position:absolute;
+    top:-105px;          /* pega la imagen al margen superior */
+    left:40%;
+    transform:translateX(-50%);
+
+    width:195%;
+    height:350px;
+
+    background:url("images/gluco2-WEB.png") center top no-repeat;
+    background-size:contain;
+
+    opacity:.11;
+    pointer-events:none;
+}
+
+.glucose-icon > *{
+    position:relative;
+    z-index:1;
+}
 
     /* =============================================
        EMAIL SUBSCRIPTION BAND
@@ -708,9 +715,11 @@
       font-family: 'Playfair Display', serif;
     }
 
-    .carousel-wrap {
-      position: relative;
-    }
+    .carousel-wrap{
+		position: relative;
+		overflow: visible;
+		min-height: 360px;
+	}
 
     .carousel-track {
       display: grid;
@@ -719,18 +728,30 @@
     }
 
     .carousel-slide {
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      display: none;
-      cursor: pointer;
-    }
-    .carousel-slide.active { display: block; }
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  border-radius: var(--radius-lg);
+	  overflow: hidden;
+	  cursor: pointer;
+	  display: block;
+	  opacity: 0;
+	  visibility: hidden;
+	  pointer-events: none;
+	}
+    .carousel-slide.active {
+	  position: relative;
+	  opacity: 1;
+	  visibility: visible;
+	  pointer-events: auto;
+	  z-index: 2;
+	}
 
     .carousel-slide-inner {
       display: flex;
       align-items: center;
       min-height: 360px;
-      background: linear-gradient(135deg, var(--navy-mid) 0%, var(--blue-deep) 100%);
+
       position: relative;
       overflow: hidden;
     }
@@ -738,7 +759,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(10,15,46,0.92) 35%, rgba(10,15,46,0.35) 100%);
+    
       z-index: 1;
     }
     .slide-bg {
@@ -749,6 +770,12 @@
       height: 100%;
       opacity: 0.35;
     }
+	.slide-img{
+		display:block;
+		width:100%;
+		height:490px;
+		object-fit:cover;
+	}
     .slide-content {
       position: relative;
       z-index: 2;
@@ -806,6 +833,29 @@
       transition: background 0.2s, transform 0.2s;
     }
     .slide-cta:hover { background: var(--gold); transform: translateY(-2px); }
+
+	.carousel-dots{
+		display:flex;
+		justify-content:center;
+		align-items:center;
+		gap:12px;
+		margin-top:28px;
+	}
+
+	.carousel-dot{
+		width:12px;
+		height:12px;
+		border-radius:50%;
+		border:none;
+		background:rgba(255,255,255,.35);
+		cursor:pointer;
+		transition:.3s;
+	}
+
+	.carousel-dot.active{
+		background:var(--cyan);
+		transform:scale(1.25);
+	}
 
     .carousel-btn {
       position: absolute;
@@ -1037,7 +1087,7 @@
       <!-- right photo fades into background -->
     <img
       class="hero-photo"
-      src="doctora-iced-header-2.png"
+      src="images/doctora-iced-header-2.png"
       alt="Lic. María Gabriela Pérez"
       aria-hidden="true"
     />
@@ -1167,8 +1217,7 @@
     <!-- RIGHT: topics -->
     <aside class="sidebar-right">
       <div class="glucose-icon">
-        <div class="number">102</div>
-        <div class="unit">mg/dL · Glucosa</div>
+        <div class="glucose-icon"></div>
       </div>
 
       <p class="topics-label">Temas tratados</p>
@@ -1319,6 +1368,11 @@
    <!-- JS -->
   <script>
 // ── HAMBURGER MENU ──
+// ── ELEMENTOS ──
+const hamburger = document.getElementById('menu-btn');
+const navOverlay = document.getElementById('navOverlay');
+
+// ── HAMBURGER MENU ──
 function toggleMenu(open) {
   hamburger.classList.toggle('open', open);
   hamburger.setAttribute('aria-expanded', String(open));
@@ -1372,8 +1426,8 @@ document.addEventListener('keydown', e => {
       nextSlide.offsetHeight;
 
       // Animate both
-      nextSlide.style.transition = 'opacity 0.85s cubic-bezier(.77,0,.175,1), transform 0.85s cubic-bezier(.77,0,.175,1)';
-      prevSlide.style.transition = 'opacity 0.85s cubic-bezier(.77,0,.175,1)';
+      nextSlide.style.transition = 'opacity 1.4s ease-in-out, transform 1.4s ease-out';
+      prevSlide.style.transition = 'opacity 1.4s ease-in-out';
       nextSlide.style.opacity = '1';
       nextSlide.style.transform = 'scale(1)';
       prevSlide.style.opacity = '0';
@@ -1384,9 +1438,7 @@ document.addEventListener('keydown', e => {
         prevSlide.style.cssText = '';
 
         nextSlide.classList.add('active');
-        nextSlide.style.cssText = '';
-        nextSlide.style.position = 'relative';
-        nextSlide.style.opacity  = '1';
+        nextSlide.removeAttribute('style');
 
         // Update dots
         dots[current].classList.remove('active');
@@ -1394,7 +1446,7 @@ document.addEventListener('keydown', e => {
 
         current = next;
         isAnimating = false;
-      }, 880);
+      }, 1000);
     }
 
     function resetAuto() {
